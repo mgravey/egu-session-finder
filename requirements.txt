@@ -1,0 +1,4 @@
+# Optional in the scanner, but installed for substantially faster JSON parsing.
+orjson>=3.10,<4
+beautifulsoup4>=4.12,<5
+numpy>=2.0,<3

@@ -1,0 +1,6 @@
+{
+  "source": "https://www.egu.eu/meetings/calendar/store",
+  "retrieved": null,
+  "colors": {},
+  "note": "The supplied source currently returns HTTP 404. The browser uses a neutral accessible fallback until official current values are retrieved."
+}

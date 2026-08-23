@@ -1,0 +1,36 @@
+{
+  "models": [
+    {
+      "name": "minilm-l6",
+      "python_model_id": "sentence-transformers/all-MiniLM-L6-v2",
+      "browser_model_id": "Xenova/all-MiniLM-L6-v2",
+      "browser_model_path": "/models/minilm-l6",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "dimension": 384,
+      "max_tokens": 256,
+      "query_prefix": "",
+      "license": "apache-2.0"
+    },
+    {
+      "name": "bge-small-en-v1.5",
+      "python_model_id": "BAAI/bge-small-en-v1.5",
+      "browser_model_id": "Xenova/bge-small-en-v1.5",
+      "browser_model_path": "/models/bge-small-en-v1.5",
+      "revision": "ea104dacec62c0de699686887e3f920caeb4f3e3",
+      "dimension": 384,
+      "max_tokens": 512,
+      "query_prefix": "Represent this sentence for searching relevant passages: ",
+      "license": "mit"
+    },
+    {
+      "name": "mxbai-xsmall-v1",
+      "python_model_id": "mixedbread-ai/mxbai-embed-xsmall-v1",
+      "browser_model_id": "mixedbread-ai/mxbai-embed-xsmall-v1",
+      "browser_model_path": "/models/mxbai-xsmall-v1",
+      "dimension": 384,
+      "max_tokens": 512,
+      "query_prefix": "",
+      "license": "apache-2.0"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+-r requirements.txt
+
+# Use Python 3.12 for the broadest PyTorch/ONNX compatibility on Apple Silicon.
+sentence-transformers>=5.0,<6
+torch>=2.7,<3
+huggingface-hub>=0.34,<2
+scikit-learn>=1.7,<2
+onnx>=1.18,<2
+onnxruntime>=1.22,<2
+optimum[onnxruntime]>=1.27,<3
