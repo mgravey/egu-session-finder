@@ -1,5 +1,8 @@
 # Changes
 
+- Added frozen MiniLM multi-vector field/chunk embeddings and a five-feature
+  positive-weight listwise ranker with temporal validation and sealed testing.
+
 - Prepared ignored local Git worktrees for isolated full-encoder, multi-vector,
   and CLS-pooling retrieval experiments.
 

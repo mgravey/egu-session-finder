@@ -6,6 +6,7 @@ __pycache__/
 .venv/
 .venv-ml/
 .worktrees/
+experiment-output/
 
 data/
 *.jsonl.gz

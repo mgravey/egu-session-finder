@@ -310,6 +310,25 @@ not interfere with the deployable baseline. Local worktrees live under the
 ignored `.worktrees/` directory; generated data and model checkpoints remain
 ignored and are documented by each experiment branch.
 
+On `experiment/multi-vector`, build title/chunk/description vectors and learn a
+five-feature listwise scorer:
+
+```bash
+python scripts/build_multivector_embeddings.py \
+  --prepared-dir /path/to/shared/data/matcher/prepared \
+  --output-dir /path/to/shared/data/matcher/experiments/multi-vector/embeddings
+
+python scripts/train_multivector_ranker.py \
+  --prepared-dir /path/to/shared/data/matcher/prepared \
+  --baseline-embedding-dir /path/to/shared/data/matcher/embeddings/minilm-l6 \
+  --multivector-dir /path/to/shared/data/matcher/experiments/multi-vector/embeddings \
+  --output-dir /path/to/shared/data/matcher/experiments/multi-vector/ranker
+```
+
+The learned browser scorer combines joint cosine, title-to-title,
+title-to-description, chunk-to-title, and chunk-to-description maxima. Missing
+descriptions fall back deterministically to the corresponding title feature.
+
 Fine-tune only the selected candidate. If BGE wins the baseline comparison:
 
 ```bash
