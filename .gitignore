@@ -8,6 +8,7 @@ __pycache__/
 .worktrees/
 experiment-output/
 # Historical field vectors and learned mixtures remain generated artifacts.
+# Complete experiment score matrices remain generated artifacts.
 
 data/
 *.jsonl.gz

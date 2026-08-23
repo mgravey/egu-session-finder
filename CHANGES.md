@@ -4,6 +4,8 @@
   positive-weight listwise ranker with temporal validation and sealed testing.
 - Added composition with an existing learned query/session metric so the
   multi-vector experiment can be compared against the deployed learned head.
+- Added complete multi-vector score-matrix export for exact typical-session rank
+  distributions with the shared filtering and tie-breaking implementation.
 
 - Prepared ignored local Git worktrees for isolated full-encoder, multi-vector,
   and CLS-pooling retrieval experiments.

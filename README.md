@@ -330,6 +330,11 @@ query/session metric to every field vector before fitting the mixture. This
 tests whether multi-vector evidence adds value beyond the current learned
 single-vector matcher rather than only beyond raw cosine.
 
+`export_multivector_score_matrices.py` writes complete same-year score matrices
+from the selected browser weights. They can be passed to the common
+`export_dense_rank_distribution.py --typical-sessions-only` command for exact,
+directly comparable cumulative-rank curves.
+
 The learned browser scorer combines joint cosine, title-to-title,
 title-to-description, chunk-to-title, and chunk-to-description maxima. Missing
 descriptions fall back deterministically to the corresponding title feature.
