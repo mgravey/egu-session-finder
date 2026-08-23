@@ -335,6 +335,31 @@ from the selected browser weights. They can be passed to the common
 `export_dense_rank_distribution.py --typical-sessions-only` command for exact,
 directly comparable cumulative-rank curves.
 
+Calibrate a dynamic prediction set on EGU24 after the scorer is fixed:
+
+```bash
+python scripts/calibrate_prediction_sets.py \
+  --prepared-dir data/matcher/prepared \
+  --matrix-dir data/matcher/experiments/multi-vector/matrices \
+  --calibration-year 2024 \
+  --evaluation-years 2025 2026 \
+  --target-coverage 0.80 \
+  --min-results 3 \
+  --max-results 20 \
+  --typical-sessions-only \
+  --output data/matcher/experiments/multi-vector/prediction-set.json
+```
+
+The set includes every session within a validation-calibrated score gap of the
+top session. This makes the result count query-dependent. The uncapped set is
+reported separately from the 20-card display cap, because truncation changes
+the calibrated-coverage interpretation. On the completed scorer, the
+80% calibration produced median set sizes of 10, 10, and 11 and uncapped
+historical-assignment coverage of 80.3%, 81.4%, and 80.8% on EGU24–26.
+Coverage means that at least one recorded assignment appears in the set; it is
+not a probability that the assignment or any suggested session is uniquely
+correct.
+
 The learned browser scorer combines joint cosine, title-to-title,
 title-to-description, chunk-to-title, and chunk-to-description maxima. Missing
 descriptions fall back deterministically to the corresponding title feature.
@@ -436,6 +461,13 @@ rankSessions(
   { topK?: number }
 ): Promise<MatchResponse>
 ```
+
+When the exported manifest contains a calibrated `predictionSet`, omitting
+`topK` selects between 3 and 20 displayed sessions dynamically. The response
+reports the uncapped prediction-set size and whether display truncation was
+necessary. Supplying `topK` explicitly retains deterministic fixed-count
+behavior. A calibration artifact must only be bundled with the exact scorer
+that generated its score matrices.
 
 The supplied division-color URL currently returns HTTP 404.
 `config/division_colors.json` records this and uses a neutral accessible UI

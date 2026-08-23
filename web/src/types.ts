@@ -21,7 +21,27 @@ export interface RankedSession {
 export interface MatchResponse {
   modelVersion: string;
   catalogueYear: number;
+  selection: {
+    mode: "dynamic" | "fixed";
+    shownCount: number;
+    predictionSetSize?: number;
+    targetCoverage?: number;
+    calibrationYear?: number;
+    truncated: boolean;
+  };
   results: RankedSession[];
+}
+
+export interface PredictionSetManifest {
+  method: "top-score-gap";
+  score: string;
+  candidatePolicy: "typical-scientific-only" | "all-sessions";
+  calibrationYear: number;
+  calibrationExamples: number;
+  targetCoverage: number;
+  maxScoreGap: number;
+  minResults: number;
+  maxResults: number;
 }
 
 export interface SessionRecord {
@@ -80,6 +100,7 @@ export interface ModelManifest {
     margin_high: number;
     top_score_low: number;
   };
+  predictionSet?: PredictionSetManifest;
   metric?: MetricManifest;
   assets: {
     sessions: { path: string; sha256?: string };

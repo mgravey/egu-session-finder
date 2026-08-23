@@ -42,7 +42,7 @@ export async function rankSessions(
     pending.set(id, { resolve, reject });
   });
   await enableOfflineCache();
-  matcherWorker().postMessage({ type: "rank", id, input, topK: options.topK ?? 10 });
+  matcherWorker().postMessage({ type: "rank", id, input, topK: options.topK });
   return result;
 }
 

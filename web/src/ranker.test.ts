@@ -67,6 +67,7 @@ describe("SessionRanker", () => {
     );
     expect(response.results.map((item) => item.sessionId)).toEqual(["1", "2"]);
     expect(response.results[0].confidence).toBe("high");
+    expect(response.selection.mode).toBe("fixed");
   });
 
   it("uses lexical terms when hybrid scoring is enabled", () => {
@@ -82,5 +83,29 @@ describe("SessionRanker", () => {
     expect(() =>
       new SessionRanker(catalogue()).rank({ abstract: " " }, new Float32Array([1, 0])),
     ).toThrow("required");
+  });
+
+  it("uses a calibrated score gap when topK is omitted", () => {
+    const input = catalogue();
+    input.manifest.predictionSet = {
+      method: "top-score-gap",
+      score: "fixture",
+      candidatePolicy: "typical-scientific-only",
+      calibrationYear: 2024,
+      calibrationExamples: 100,
+      targetCoverage: 0.8,
+      maxScoreGap: 0.15,
+      minResults: 1,
+      maxResults: 1,
+    };
+    const response = new SessionRanker(input).rank(
+      { abstract: "Cloud research" },
+      new Float32Array([0.9, 0.8]),
+    );
+    expect(response.selection.mode).toBe("dynamic");
+    expect(response.selection.predictionSetSize).toBe(2);
+    expect(response.selection.shownCount).toBe(1);
+    expect(response.selection.truncated).toBe(true);
+    expect(response.results).toHaveLength(1);
   });
 });

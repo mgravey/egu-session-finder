@@ -76,6 +76,19 @@ class ExportBrowserCatalogueTests(unittest.TestCase):
                 year=2026,
                 output_dir=output,
                 dense_weight=1.0,
+                prediction_set={
+                    "schemaVersion": 1,
+                    "method": "top-score-gap",
+                    "score": "fixture",
+                    "candidatePolicy": "typical-scientific-only",
+                    "calibrationYear": 2024,
+                    "calibrationExamples": 100,
+                    "targetCoverage": 0.8,
+                    "maxScoreGap": 0.12,
+                    "minResults": 3,
+                    "maxResults": 20,
+                    "evaluations": {"2024": {}},
+                },
             )
             metadata = json.loads((output / "sessions.json").read_text())
             vector = np.fromfile(output / "session-vectors.bin", dtype="<f4")
@@ -83,6 +96,9 @@ class ExportBrowserCatalogueTests(unittest.TestCase):
             self.assertEqual(len(manifest["assets"]["sessions"]["sha256"]), 64)
             self.assertEqual(len(manifest["assets"]["vectors"]["sha256"]), 64)
             self.assertEqual(metadata[0]["color"], "#123456")
+            self.assertEqual(manifest["schemaVersion"], 3)
+            self.assertEqual(manifest["predictionSet"]["maxScoreGap"], 0.12)
+            self.assertNotIn("evaluations", manifest["predictionSet"])
             np.testing.assert_allclose(vector, [0.6, 0.8])
 
     def test_includes_local_browser_model_checksums_when_available(self):

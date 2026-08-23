@@ -24,10 +24,15 @@ function render(response: MatchResponse): void {
   const uncertain =
     response.results.length > 1 &&
     response.results[0].similarity - response.results[1].similarity < 0.025;
-  ambiguity.hidden = !uncertain;
-  ambiguity.textContent = uncertain
-    ? "Several sessions are similarly relevant. Review the descriptions rather than relying only on rank."
+  const dynamic = response.selection.mode === "dynamic";
+  const selectionMessage = dynamic
+    ? `The score-calibrated set contains ${response.selection.predictionSetSize} session${response.selection.predictionSetSize === 1 ? "" : "s"}, targeting ${Math.round((response.selection.targetCoverage ?? 0) * 100)}% historical assignment coverage.${response.selection.truncated ? ` The first ${response.selection.shownCount} are displayed.` : ""}`
     : "";
+  ambiguity.hidden = !uncertain && !dynamic;
+  ambiguity.textContent = [
+    selectionMessage,
+    uncertain ? "Several sessions are similarly relevant. Review the descriptions rather than relying only on rank." : "",
+  ].filter(Boolean).join(" ");
   response.results.forEach((match) => {
     const item = document.createElement("li");
     item.className = "result-card";
@@ -83,6 +88,5 @@ form.addEventListener("submit", (event) => {
     type: "rank",
     id: requestId,
     input: { title: title.value, abstract: abstract.value },
-    topK: 10,
   });
 });

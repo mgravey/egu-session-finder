@@ -51,7 +51,7 @@ export class SessionRanker {
     );
   }
 
-  rank(input: MatchInput, query: Float32Array, topK = 10): MatchResponse {
+  rank(input: MatchInput, query: Float32Array, topK?: number): MatchResponse {
     const abstract = input.abstract.trim();
     if (!abstract) throw new Error("An abstract is required.");
     const dense = dotRows(query, this.catalogue.vectors, this.catalogue.manifest.dimension);
@@ -72,6 +72,17 @@ export class SessionRanker {
     const top = scores[order[0]] ?? 0;
     const margin = top - (scores[order[1]] ?? top);
     const confidenceLabel = confidence(top, margin, this.catalogue.manifest);
+    const calibration = this.catalogue.manifest.predictionSet;
+    const withinGap = calibration
+      ? order.filter((index) => scores[index] >= top - calibration.maxScoreGap - 1e-7).length
+      : 10;
+    const predictionSetSize = calibration
+      ? Math.min(order.length, Math.max(calibration.minResults, withinGap))
+      : undefined;
+    const requestedCount = topK === undefined
+      ? Math.min(predictionSetSize ?? 10, calibration?.maxResults ?? 10)
+      : Math.max(1, topK);
+    const shownCount = Math.min(requestedCount, order.length);
     return {
       modelVersion: [
         `${this.catalogue.manifest.browserModelId}@${this.catalogue.manifest.modelRevision}`,
@@ -80,7 +91,15 @@ export class SessionRanker {
           : null,
       ].filter(Boolean).join("+"),
       catalogueYear: this.catalogue.manifest.catalogueYear,
-      results: order.slice(0, Math.max(1, Math.min(topK, order.length))).map((index, rank) => {
+      selection: {
+        mode: topK === undefined && calibration ? "dynamic" : "fixed",
+        shownCount,
+        predictionSetSize,
+        targetCoverage: topK === undefined ? calibration?.targetCoverage : undefined,
+        calibrationYear: topK === undefined ? calibration?.calibrationYear : undefined,
+        truncated: predictionSetSize !== undefined && shownCount < predictionSetSize,
+      },
+      results: order.slice(0, shownCount).map((index, rank) => {
         const session = this.catalogue.sessions[index];
         return {
           rank: rank + 1,

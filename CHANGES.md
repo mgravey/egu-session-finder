@@ -6,6 +6,11 @@
   multi-vector experiment can be compared against the deployed learned head.
 - Added complete multi-vector score-matrix export for exact typical-session rank
   distributions with the shared filtering and tie-breaking implementation.
+- Added finite-sample top-score-gap calibration for dynamic prediction sets,
+  including temporal coverage/set-size evaluation and explicit display-cap
+  accounting.
+- Added optional dynamic result counts to the browser API and UI, with fixed
+  `topK` override, truncation metadata, and catalogue-export validation.
 
 - Prepared ignored local Git worktrees for isolated full-encoder, multi-vector,
   and CLS-pooling retrieval experiments.

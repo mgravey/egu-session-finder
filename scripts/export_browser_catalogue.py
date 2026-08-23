@@ -12,6 +12,7 @@ from typing import Any, Iterable
 import numpy as np
 
 from matcher_common import iter_jsonl, sha256_file, write_json
+from session_categories import is_typical_scientific_session
 
 
 def load_metric_head(path: Path) -> dict[str, Any]:
@@ -100,6 +101,31 @@ def write_query_metric(
     }
 
 
+def browser_prediction_set(value: dict[str, Any]) -> dict[str, Any]:
+    """Validate and retain only inference-time prediction-set configuration."""
+    required = (
+        "method",
+        "score",
+        "candidatePolicy",
+        "calibrationYear",
+        "calibrationExamples",
+        "targetCoverage",
+        "maxScoreGap",
+        "minResults",
+        "maxResults",
+    )
+    missing = [name for name in required if name not in value]
+    if missing:
+        raise ValueError(f"prediction-set calibration is missing: {', '.join(missing)}")
+    if value["method"] != "top-score-gap":
+        raise ValueError("unsupported prediction-set method")
+    if not 0 < float(value["targetCoverage"]) < 1:
+        raise ValueError("prediction-set target coverage must be between zero and one")
+    if not 1 <= int(value["minResults"]) <= int(value["maxResults"]):
+        raise ValueError("invalid prediction-set display bounds")
+    return {name: value[name] for name in required}
+
+
 def export_catalogue(
     *,
     prepared_dir: Path,
@@ -111,6 +137,7 @@ def export_catalogue(
     output_dir: Path,
     dense_weight: float,
     metric_head_path: Path | None = None,
+    prediction_set: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     sessions = list(iter_jsonl(prepared_dir / "sessions.jsonl.gz"))
     vectors = np.load(vectors_path, mmap_mode="r")
@@ -118,7 +145,18 @@ def export_catalogue(
         raise ValueError(
             f"vector/session row mismatch: {len(vectors)} vectors for {len(sessions)} sessions"
         )
-    indices = [index for index, session in enumerate(sessions) if session["event_year"] == year]
+    candidate_policy = (
+        prediction_set.get("candidatePolicy") if prediction_set is not None else "all-sessions"
+    )
+    indices = [
+        index
+        for index, session in enumerate(sessions)
+        if session["event_year"] == year
+        and (
+            candidate_policy != "typical-scientific-only"
+            or is_typical_scientific_session(session)
+        )
+    ]
     if not indices:
         raise ValueError(f"no prepared sessions for {year}")
     selected_vectors = np.asarray(vectors[indices], dtype=np.float32)
@@ -163,7 +201,7 @@ def export_catalogue(
     write_json(sessions_output, metadata)
     generated = datetime.now(timezone.utc).isoformat()
     manifest = {
-        "schemaVersion": 2 if metric is not None else 1,
+        "schemaVersion": 3 if prediction_set is not None else (2 if metric is not None else 1),
         "catalogueYear": year,
         "catalogueVersion": f"EGU{str(year)[-2:]}-{generated[:10]}",
         "generatedAt": generated,
@@ -189,6 +227,8 @@ def export_catalogue(
             "vectors": {"path": "session-vectors.bin"},
         },
     }
+    if prediction_set is not None:
+        manifest["predictionSet"] = browser_prediction_set(prediction_set)
     manifest["assets"]["sessions"]["sha256"] = sha256_file(sessions_output)
     manifest["assets"]["vectors"]["sha256"] = sha256_file(vectors_output)
     if metric is not None:
@@ -244,6 +284,11 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Optional metric-head.npz; transforms sessions offline and exports the query side",
     )
+    parser.add_argument(
+        "--prediction-set",
+        type=Path,
+        help="Optional calibrated top-score-gap prediction-set JSON",
+    )
     return parser
 
 
@@ -261,6 +306,11 @@ def main(argv: Iterable[str] | None = None) -> int:
     colors_value = json.loads(args.division_colors.read_text(encoding="utf-8"))
     colors = colors_value.get("colors", colors_value)
     bands = json.loads(args.confidence_bands.read_text(encoding="utf-8"))
+    prediction_set = (
+        json.loads(args.prediction_set.read_text(encoding="utf-8"))
+        if args.prediction_set
+        else None
+    )
     manifest = export_catalogue(
         prepared_dir=args.prepared_dir,
         vectors_path=args.vectors,
@@ -271,6 +321,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         output_dir=args.output_dir,
         dense_weight=args.dense_weight,
         metric_head_path=args.metric_head,
+        prediction_set=prediction_set,
     )
     print(json.dumps(manifest, indent=2))
     return 0

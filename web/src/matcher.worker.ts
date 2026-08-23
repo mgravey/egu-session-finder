@@ -173,7 +173,7 @@ self.addEventListener("message", async (event: MessageEvent) => {
       if (!queryMetric) throw new Error("The learned query metric is unavailable.");
       vector = transformQueryMetric(vector, queryMetric, manifest.metric);
     }
-    const response = ranker.rank(message.input, vector, message.topK ?? 10);
+    const response = ranker.rank(message.input, vector, message.topK);
     self.postMessage({ type: "result", id: message.id, response });
   } catch (error) {
     self.postMessage({

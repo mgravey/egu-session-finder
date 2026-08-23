@@ -9,6 +9,7 @@ __pycache__/
 experiment-output/
 # Historical field vectors and learned mixtures remain generated artifacts.
 # Complete experiment score matrices remain generated artifacts.
+# Prediction-set calibration reports remain reproducible generated artifacts.
 
 data/
 *.jsonl.gz
