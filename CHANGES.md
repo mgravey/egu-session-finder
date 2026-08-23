@@ -1,5 +1,8 @@
 # Changes
 
+- Prepared ignored local Git worktrees for isolated full-encoder, multi-vector,
+  and CLS-pooling retrieval experiments.
+
 - Added a fast, reusable dense-cosine rank-distribution export showing how many
   historical abstracts recover an assigned session within each rank threshold.
 - Added persistent, complete same-year abstract-by-session cosine matrices with

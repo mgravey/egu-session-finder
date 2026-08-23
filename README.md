@@ -302,6 +302,14 @@ python scripts/export_browser_catalogue.py \
 Exact model sources, licenses, limits, and ONNX artifact choices are recorded
 in [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
 
+### Isolated ranking experiments
+
+Larger ranking experiments are developed on dedicated Git worktree branches so
+full-encoder fine-tuning, multi-vector retrieval, and alternative pooling do
+not interfere with the deployable baseline. Local worktrees live under the
+ignored `.worktrees/` directory; generated data and model checkpoints remain
+ignored and are documented by each experiment branch.
+
 Fine-tune only the selected candidate. If BGE wins the baseline comparison:
 
 ```bash
