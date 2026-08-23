@@ -325,6 +325,11 @@ python scripts/train_multivector_ranker.py \
   --output-dir /path/to/shared/data/matcher/experiments/multi-vector/ranker
 ```
 
+Pass `--metric-head /path/to/metric-head.npz` to apply the existing asymmetric
+query/session metric to every field vector before fitting the mixture. This
+tests whether multi-vector evidence adds value beyond the current learned
+single-vector matcher rather than only beyond raw cosine.
+
 The learned browser scorer combines joint cosine, title-to-title,
 title-to-description, chunk-to-title, and chunk-to-description maxima. Missing
 descriptions fall back deterministically to the corresponding title feature.

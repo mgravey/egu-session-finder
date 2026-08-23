@@ -12,6 +12,11 @@ from typing import Any, Iterable, Sequence
 
 import numpy as np
 
+from export_browser_catalogue import (
+    load_metric_head,
+    transform_query_vectors,
+    transform_session_vectors,
+)
 from matcher_common import iter_jsonl, write_json
 from matching_metrics import retrieval_metrics
 from train_embedding_metric import build_year_training_data
@@ -103,7 +108,7 @@ class MultiVectorWeights:
 
 
 def load_arrays(args: argparse.Namespace) -> dict[str, np.ndarray]:
-    return {
+    arrays = {
         "query_joint": np.load(
             args.baseline_embedding_dir / f"abstracts_{args.abstract_count}.npy",
             mmap_mode="r",
@@ -126,6 +131,19 @@ def load_arrays(args: argparse.Namespace) -> dict[str, np.ndarray]:
             args.multivector_dir / "session_description_mask.npy", mmap_mode="r"
         ),
     }
+    if args.metric_head:
+        metric = load_metric_head(args.metric_head)
+        for name in ("query_joint", "query_title", "query_chunks"):
+            shape = arrays[name].shape
+            arrays[name] = transform_query_vectors(
+                np.asarray(arrays[name]).reshape(-1, shape[-1]), metric
+            ).reshape(shape)
+        for name in ("session_joint", "session_title", "session_description"):
+            shape = arrays[name].shape
+            arrays[name] = transform_session_vectors(
+                np.asarray(arrays[name]).reshape(-1, shape[-1]), metric
+            ).reshape(shape)
+    return arrays
 
 
 def tensor_rows(values: np.ndarray, indices: np.ndarray, device: str) -> Any:
@@ -289,6 +307,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "validation_year": 2024,
         "sealed_test_year": 2025,
         "forward_year": 2026,
+        "input_metric_head": str(args.metric_head) if args.metric_head else None,
         "selected_weights": {
             name: round(float(value), 8)
             for name, value in zip(FEATURE_NAMES, weights, strict=True)
@@ -309,6 +328,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--baseline-embedding-dir", type=Path, required=True)
     parser.add_argument("--multivector-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument(
+        "--metric-head",
+        type=Path,
+        help="Optionally transform every query/session field with an existing learned head",
+    )
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=64)

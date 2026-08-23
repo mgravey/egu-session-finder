@@ -2,6 +2,8 @@
 
 - Added frozen MiniLM multi-vector field/chunk embeddings and a five-feature
   positive-weight listwise ranker with temporal validation and sealed testing.
+- Added composition with an existing learned query/session metric so the
+  multi-vector experiment can be compared against the deployed learned head.
 
 - Prepared ignored local Git worktrees for isolated full-encoder, multi-vector,
   and CLS-pooling retrieval experiments.
