@@ -64,7 +64,11 @@ function cardDivisionStyle(item: HTMLElement, colors: string[]): void {
       `${color} ${(index * width).toFixed(3)}%`,
       `${color} ${((index + 1) * width).toFixed(3)}%`,
     ]);
-    item.style.setProperty("--division-spectrum", `linear-gradient(90deg, ${segments.join(", ")})`);
+    const direction = safeColors.length > 3 ? "180deg" : "90deg";
+    item.style.setProperty(
+      "--division-spectrum",
+      `linear-gradient(${direction}, ${segments.join(", ")})`,
+    );
   }
 }
 

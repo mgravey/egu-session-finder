@@ -25,6 +25,7 @@ web/.cache/
 web/.wrangler/
 web/.rollup.cache/
 web/.vite-inspect/
+web/.eslintcache
 *.tsbuildinfo
 web/public/models/*
 !web/public/models/.gitkeep

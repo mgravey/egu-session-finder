@@ -485,8 +485,9 @@ presentation metadata; they never enter embedding, scoring, calibration, or
 ranking. The session-code prefix identifies the host division. For sessions
 co-organised by two or three divisions, the card background blends their colors
 and a segmented top rule preserves the exact membership. For sessions spanning
-four or more divisions, the host tint remains dominant while the top rule can
-scale to every participating division. Compact division codes and the official
+four or more divisions, the host tint remains dominant while equal color
+segments run vertically down the left edge, scaling cleanly to every
+participating division. Compact division codes and the official
 `Co-organized by` label remain visible, so color is never the only signal.
 
 The public interface is split into two static pages: `index.html` contains the
