@@ -4,6 +4,7 @@ import type {
   MatchInput,
   MatchResponse,
   ModelManifest,
+  MultiVectorQuery,
   SessionRecord,
 } from "./types";
 
@@ -37,12 +38,30 @@ function dotRows(query: Float32Array, matrix: Float32Array, dimension: number): 
   return scores;
 }
 
+function dotVector(
+  query: Float32Array,
+  matrix: Float32Array,
+  vectorIndex: number,
+  dimension: number,
+): number {
+  let score = 0;
+  const offset = vectorIndex * dimension;
+  for (let column = 0; column < dimension; column += 1) {
+    score += query[column] * matrix[offset + column];
+  }
+  return score;
+}
+
 export class SessionRanker {
   private readonly bm25: BM25Index;
 
   constructor(private readonly catalogue: Catalogue) {
     if (catalogue.sessions.length !== catalogue.manifest.sessionCount) {
       throw new Error("Session metadata count does not match the manifest.");
+    }
+    const stride = catalogue.manifest.scoring.multiVector?.sessionVectorStride ?? 1;
+    if (catalogue.vectors.length !== catalogue.sessions.length * stride * catalogue.manifest.dimension) {
+      throw new Error("Session vector count does not match the catalogue manifest.");
     }
     this.bm25 = new BM25Index(
       catalogue.sessions.map((session) => session.searchText ?? ""),
@@ -51,10 +70,73 @@ export class SessionRanker {
     );
   }
 
-  rank(input: MatchInput, query: Float32Array, topK?: number): MatchResponse {
+  private multiVectorScores(query: MultiVectorQuery): Float32Array {
+    const config = this.catalogue.manifest.scoring.multiVector;
+    if (!config) throw new Error("Multi-vector scoring configuration is missing.");
+    const dimension = this.catalogue.manifest.dimension;
+    for (const vector of [query.joint, query.title, ...query.chunks]) {
+      if (vector.length !== dimension) throw new Error("Query vector dimensions do not match.");
+    }
+    const scores = new Float32Array(this.catalogue.sessions.length);
+    const weights = config.weights;
+    this.catalogue.sessions.forEach((session, row) => {
+      const base = row * config.sessionVectorStride;
+      const joint = dotVector(query.joint, this.catalogue.vectors, base, dimension);
+      const titleTitle = dotVector(query.title, this.catalogue.vectors, base + 1, dimension);
+      let titleDescription = titleTitle;
+      let chunksTitle = titleTitle;
+      let chunksDescription = titleTitle;
+      const descriptionCount = Math.min(
+        session.descriptionVectorCount ?? 0,
+        config.sessionChunks,
+      );
+      if (descriptionCount > 0) {
+        titleDescription = -Infinity;
+        for (let part = 0; part < descriptionCount; part += 1) {
+          titleDescription = Math.max(
+            titleDescription,
+            dotVector(query.title, this.catalogue.vectors, base + 2 + part, dimension),
+          );
+        }
+      }
+      if (query.chunks.length > 0) {
+        chunksTitle = -Infinity;
+        for (const chunk of query.chunks) {
+          chunksTitle = Math.max(
+            chunksTitle,
+            dotVector(chunk, this.catalogue.vectors, base + 1, dimension),
+          );
+        }
+        chunksDescription = chunksTitle;
+        if (descriptionCount > 0) {
+          chunksDescription = -Infinity;
+          for (const chunk of query.chunks) {
+            for (let part = 0; part < descriptionCount; part += 1) {
+              chunksDescription = Math.max(
+                chunksDescription,
+                dotVector(chunk, this.catalogue.vectors, base + 2 + part, dimension),
+              );
+            }
+          }
+        }
+      }
+      scores[row] =
+        weights.joint * joint +
+        weights.title_to_title * titleTitle +
+        weights.title_to_description * titleDescription +
+        weights.chunks_to_title * chunksTitle +
+        weights.chunks_to_description * chunksDescription;
+    });
+    return scores;
+  }
+
+  rank(input: MatchInput, query: Float32Array | MultiVectorQuery, topK?: number): MatchResponse {
     const abstract = input.abstract.trim();
     if (!abstract) throw new Error("An abstract is required.");
-    const dense = dotRows(query, this.catalogue.vectors, this.catalogue.manifest.dimension);
+    const isMultiVector = this.catalogue.manifest.scoring.kind === "multivector";
+    const dense = isMultiVector
+      ? this.multiVectorScores(query as MultiVectorQuery)
+      : dotRows(query as Float32Array, this.catalogue.vectors, this.catalogue.manifest.dimension);
     let scores = dense;
     const denseWeight = this.catalogue.manifest.scoring.denseWeight;
     if (this.catalogue.manifest.scoring.bm25.enabled && denseWeight < 1) {
@@ -71,7 +153,6 @@ export class SessionRanker {
     );
     const top = scores[order[0]] ?? 0;
     const margin = top - (scores[order[1]] ?? top);
-    const confidenceLabel = confidence(top, margin, this.catalogue.manifest);
     const calibration = this.catalogue.manifest.predictionSet;
     const withinGap = calibration
       ? order.filter((index) => scores[index] >= top - calibration.maxScoreGap - 1e-7).length
@@ -83,6 +164,14 @@ export class SessionRanker {
       ? Math.min(predictionSetSize ?? 10, calibration?.maxResults ?? 10)
       : Math.max(1, topK);
     const shownCount = Math.min(requestedCount, order.length);
+    const truncated = predictionSetSize !== undefined && shownCount < predictionSetSize;
+    const confidenceLabel: Confidence = calibration
+      ? truncated
+        ? "low"
+        : (predictionSetSize ?? 10) <= 5
+          ? "high"
+          : "medium"
+      : confidence(top, margin, this.catalogue.manifest);
     return {
       modelVersion: [
         `${this.catalogue.manifest.browserModelId}@${this.catalogue.manifest.modelRevision}`,
@@ -97,7 +186,7 @@ export class SessionRanker {
         predictionSetSize,
         targetCoverage: topK === undefined ? calibration?.targetCoverage : undefined,
         calibrationYear: topK === undefined ? calibration?.calibrationYear : undefined,
-        truncated: predictionSetSize !== undefined && shownCount < predictionSetSize,
+        truncated,
       },
       results: order.slice(0, shownCount).map((index, rank) => {
         const session = this.catalogue.sessions[index];

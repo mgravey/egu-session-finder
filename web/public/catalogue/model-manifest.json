@@ -1,0 +1,129 @@
+{
+  "assets": {
+    "model": [
+      {
+        "path": "models/minilm-l6/config.json",
+        "sha256": "7135149f7cffa1a573466c6e4d8423ed73b62fd2332c575bf738a0d033f70df7"
+      },
+      {
+        "path": "models/minilm-l6/onnx/model_quantized.onnx",
+        "sha256": "afdb6f1a0e45b715d0bb9b11772f032c399babd23bfc31fed1c170afc848bdb1"
+      },
+      {
+        "path": "models/minilm-l6/special_tokens_map.json",
+        "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3"
+      },
+      {
+        "path": "models/minilm-l6/tokenizer.json",
+        "sha256": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0"
+      },
+      {
+        "path": "models/minilm-l6/tokenizer_config.json",
+        "sha256": "9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3"
+      },
+      {
+        "path": "models/minilm-l6/vocab.txt",
+        "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+      }
+    ],
+    "queryMetric": {
+      "path": "query-metric.bin",
+      "sha256": "7780515ae7e4f2575301b30038f7395fe25637562d132a6160dfc7f988992214"
+    },
+    "sessions": {
+      "path": "sessions.json",
+      "sha256": "93c3bef5fa54753d801b1b04d03cd66d425aed1cfd5ab3ec0994f3ff53646556"
+    },
+    "vectors": {
+      "path": "session-vectors.bin",
+      "sha256": "3d611040875220b934b2b60fe5a5753df8b9d24b74bd606f5b50117eeb3d1a8b"
+    }
+  },
+  "browserModelId": "Xenova/all-MiniLM-L6-v2",
+  "browserModelPath": "/models/minilm-l6",
+  "catalogueVersion": "EGU26-multivector-2026-08-24",
+  "catalogueYear": 2026,
+  "confidenceBands": {
+    "margin_high": 1.0,
+    "top_score_high": 1.0,
+    "top_score_low": -1.0
+  },
+  "dimension": 384,
+  "generatedAt": "2026-08-24T06:55:46.502098+00:00",
+  "maxTokens": 256,
+  "metric": {
+    "dimension": 384,
+    "kind": "lowrank",
+    "queryLayout": [
+      {
+        "lengthFloats": 384,
+        "name": "logWeight",
+        "offsetFloats": 0,
+        "shape": [
+          384
+        ]
+      },
+      {
+        "lengthFloats": 12288,
+        "name": "queryDown",
+        "offsetFloats": 384,
+        "shape": [
+          384,
+          32
+        ]
+      },
+      {
+        "lengthFloats": 12288,
+        "name": "queryUp",
+        "offsetFloats": 12672,
+        "shape": [
+          32,
+          384
+        ]
+      }
+    ],
+    "rank": 32,
+    "sessionTransformApplied": true
+  },
+  "modelId": "sentence-transformers/all-MiniLM-L6-v2",
+  "modelRevision": "751bff37182d3f1213fa05d7196b954e230abad9",
+  "normalized": true,
+  "overlapTokens": 32,
+  "pooling": "mean",
+  "predictionSet": {
+    "calibrationExamples": 19493,
+    "calibrationYear": 2024,
+    "candidatePolicy": "typical-scientific-only",
+    "maxResults": 20,
+    "maxScoreGap": 0.13238704204559326,
+    "method": "top-score-gap",
+    "minResults": 3,
+    "score": "learned_metric_plus_multivector",
+    "targetCoverage": 0.8
+  },
+  "queryPrefix": "",
+  "schemaVersion": 4,
+  "scoring": {
+    "bm25": {
+      "b": 0.75,
+      "enabled": false,
+      "k1": 1.2
+    },
+    "denseWeight": 1.0,
+    "kind": "multivector",
+    "multiVector": {
+      "queryChunks": 4,
+      "sessionChunks": 2,
+      "sessionVectorStride": 4,
+      "weights": {
+        "chunks_to_description": 0.10285410284996033,
+        "chunks_to_title": 0.02826087921857834,
+        "joint": 0.7807101011276245,
+        "title_to_description": 0.011375309899449348,
+        "title_to_title": 0.0767996683716774
+      }
+    }
+  },
+  "sessionCount": 786,
+  "vectorDtype": "float16-le"
+}

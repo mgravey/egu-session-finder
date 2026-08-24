@@ -1,4 +1,4 @@
-const CACHE_NAME = "egu-session-matcher-v2";
+const CACHE_NAME = "egu-session-matcher-v3-multivector";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());

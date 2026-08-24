@@ -469,6 +469,31 @@ necessary. Supplying `topK` explicitly retains deterministic fixed-count
 behavior. A calibration artifact must only be bundled with the exact scorer
 that generated its score matrices.
 
+### Build the fully static website
+
+The selected multi-vector scorer is exported as packed float16 session vectors;
+the browser decodes them to float32 before ranking. The quantized MiniLM model,
+catalogue, worker, HTML, CSS, and JavaScript are all static assets. No submitted
+text is sent in a request. On the full EGU26 typical-session evaluation,
+float16 session storage changed Recall@10 by only -0.005 percentage points and
+the maximum score difference was below `4.8e-5`.
+
+After placing the quantized model in `web/public/models/minilm-l6`, build an
+annual catalogue and production site with:
+
+```bash
+scripts/build_static_site.sh \
+  --year 2026 \
+  --project-dir /Users/mathieugravey/projects/EGU_Session \
+  --data-dir /Users/mathieugravey/projects/EGU_Session/data/matcher \
+  --web-dir /Users/mathieugravey/projects/EGU_Session/web \
+  --python /Users/mathieugravey/projects/EGU_Session/.venv-ml/bin/python
+```
+
+The production directory is `web/dist`. For EGU27, update the prepared session
+catalogue and multi-vector embeddings, recalibrate if appropriate, then change
+only `--year 2027`.
+
 The supplied division-color URL currently returns HTTP 404.
 `config/division_colors.json` records this and uses a neutral accessible UI
 fallback until official current values are recovered. Colors never influence

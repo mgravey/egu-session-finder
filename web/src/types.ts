@@ -5,6 +5,12 @@ export interface MatchInput {
   abstract: string;
 }
 
+export interface MultiVectorQuery {
+  joint: Float32Array;
+  title: Float32Array;
+  chunks: Float32Array[];
+}
+
 export interface RankedSession {
   rank: number;
   sessionId: string;
@@ -53,6 +59,7 @@ export interface SessionRecord {
   title: string | null;
   description: string | null;
   descriptionMissing: boolean;
+  descriptionVectorCount?: number;
   divisions: string[];
   divisionCodes: string[];
   color: string | null;
@@ -89,11 +96,24 @@ export interface ModelManifest {
   pooling: "mean";
   normalized: true;
   queryPrefix: string;
-  vectorDtype: "float32-le";
+  vectorDtype: "float32-le" | "float16-le";
   sessionCount: number;
   scoring: {
+    kind?: "dense" | "multivector";
     denseWeight: number;
     bm25: { enabled: boolean; k1: number; b: number };
+    multiVector?: {
+      weights: {
+        joint: number;
+        title_to_title: number;
+        title_to_description: number;
+        chunks_to_title: number;
+        chunks_to_description: number;
+      };
+      queryChunks: number;
+      sessionChunks: number;
+      sessionVectorStride: number;
+    };
   };
   confidenceBands: {
     top_score_high: number;

@@ -10,6 +10,7 @@ experiment-output/
 # Historical field vectors and learned mixtures remain generated artifacts.
 # Complete experiment score matrices remain generated artifacts.
 # Prediction-set calibration reports remain reproducible generated artifacts.
+# Static production assets are rebuilt from versioned code and ignored model/data inputs.
 
 data/
 *.jsonl.gz
@@ -21,5 +22,19 @@ web/dist/
 *.tsbuildinfo
 web/public/models/*
 !web/public/models/.gitkeep
+!web/public/models/minilm-l6/
+!web/public/models/minilm-l6/config.json
+!web/public/models/minilm-l6/tokenizer.json
+!web/public/models/minilm-l6/tokenizer_config.json
+!web/public/models/minilm-l6/special_tokens_map.json
+!web/public/models/minilm-l6/vocab.txt
+!web/public/models/minilm-l6/onnx/
+!web/public/models/minilm-l6/onnx/model_quantized.onnx
+web/public/models/minilm-l6/egu_model_source.json
+web/public/models/minilm-l6/.cache/
 web/public/catalogue/*
 !web/public/catalogue/.gitkeep
+!web/public/catalogue/model-manifest.json
+!web/public/catalogue/query-metric.bin
+!web/public/catalogue/session-vectors.bin
+!web/public/catalogue/sessions.json

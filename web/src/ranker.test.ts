@@ -108,4 +108,41 @@ describe("SessionRanker", () => {
     expect(response.selection.truncated).toBe(true);
     expect(response.results).toHaveLength(1);
   });
+
+  it("ranks packed multi-vector session fields", () => {
+    const input = catalogue();
+    input.manifest.scoring = {
+      kind: "multivector",
+      denseWeight: 1,
+      bm25: { enabled: false, k1: 1.2, b: 0.75 },
+      multiVector: {
+        weights: {
+          joint: 1,
+          title_to_title: 0,
+          title_to_description: 0,
+          chunks_to_title: 0,
+          chunks_to_description: 0,
+        },
+        queryChunks: 2,
+        sessionChunks: 2,
+        sessionVectorStride: 4,
+      },
+    };
+    input.sessions[0].descriptionVectorCount = 1;
+    input.sessions[1].descriptionVectorCount = 1;
+    input.vectors = new Float32Array([
+      1, 0, 0, 1, 1, 0, 0, 0,
+      0, 1, 1, 0, 0, 1, 0, 0,
+    ]);
+    const response = new SessionRanker(input).rank(
+      { title: "Clouds", abstract: "Cloud research" },
+      {
+        joint: new Float32Array([0.9, 0.1]),
+        title: new Float32Array([0, 1]),
+        chunks: [new Float32Array([1, 0])],
+      },
+      2,
+    );
+    expect(response.results.map((item) => item.sessionId)).toEqual(["1", "2"]);
+  });
 });

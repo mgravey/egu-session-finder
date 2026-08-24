@@ -11,6 +11,14 @@
   accounting.
 - Added optional dynamic result counts to the browser API and UI, with fixed
   `topK` override, truncation metadata, and catalogue-export validation.
+- Added a complete static multi-vector browser export with float16 catalogue
+  vectors, float32 browser decoding, packed title/description fields, and the
+  selected five-feature learned scorer.
+- Rebuilt the static website around private on-device inference, calibrated
+  variable-length shortlists, responsive session results, methodology, privacy,
+  and annual catalogue export.
+- Bundled the EGU26 catalogue and quantized MiniLM model with a static asset-only
+  worker entry and Sites packaging metadata for owner-only publication.
 
 - Prepared ignored local Git worktrees for isolated full-encoder, multi-vector,
   and CLS-pooling retrieval experiments.
