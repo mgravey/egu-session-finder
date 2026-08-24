@@ -14,10 +14,17 @@ const section = document.querySelector<HTMLElement>("#results-section")!;
 const results = document.querySelector<HTMLOListElement>("#results")!;
 const modelInfo = document.querySelector<HTMLElement>("#model-info")!;
 const ambiguity = document.querySelector<HTMLElement>("#ambiguity")!;
+const moreResultsWrap = document.querySelector<HTMLElement>("#more-results-wrap")!;
+const moreResults = document.querySelector<HTMLButtonElement>("#more-results")!;
+const moreResultsLabel = moreResults.querySelector<HTMLElement>("span")!;
+const moreResultsNote = document.querySelector<HTMLElement>("#more-results-note")!;
 
 const worker = new Worker(new URL("./matcher.worker.ts", import.meta.url), { type: "module" });
 let ready = false;
 let requestId = 0;
+let lastResponse: MatchResponse | null = null;
+let lastInput: { title: string; abstract: string } | null = null;
+let expansionRequest = false;
 
 function confidenceText(value: "high" | "medium" | "low"): string {
   if (value === "high") return "focused shortlist";
@@ -25,11 +32,24 @@ function confidenceText(value: "high" | "medium" | "low"): string {
   return "moderate ambiguity";
 }
 
-function render(response: MatchResponse): void {
+function updateMoreControl(response: MatchResponse): void {
+  const total = response.selection.predictionSetSize;
+  const shown = response.selection.shownCount;
+  const remaining = total === undefined ? 0 : Math.max(0, total - shown);
+  moreResultsWrap.hidden = remaining === 0;
+  if (remaining === 0) return;
+  const increment = Math.min(10, remaining);
+  moreResultsLabel.textContent = `Show ${increment} more`;
+  moreResultsNote.textContent = `${shown} of ${total} calibrated candidates shown`;
+  moreResults.disabled = false;
+}
+
+function render(response: MatchResponse, shouldScroll = true): void {
+  lastResponse = response;
   results.replaceChildren();
   modelInfo.textContent = `EGU${String(response.catalogueYear).slice(-2)} · ${response.results.length} shown · local inference`;
   const uncertain = response.results.length > 1 && response.results[0].similarity - response.results[1].similarity < 0.025;
-  const dynamic = response.selection.mode === "dynamic";
+  const dynamic = response.selection.predictionSetSize !== undefined;
   const setSize = response.selection.predictionSetSize ?? response.results.length;
   const selectionMessage = dynamic
     ? `This abstract produced a calibrated set of ${setSize} plausible session${setSize === 1 ? "" : "s"}, targeting ${Math.round((response.selection.targetCoverage ?? 0) * 100)}% historical assignment coverage.${response.selection.truncated ? ` The first ${response.selection.shownCount} are displayed.` : ""}`
@@ -86,8 +106,9 @@ function render(response: MatchResponse): void {
     }
     results.append(item);
   });
+  updateMoreControl(response);
   section.hidden = false;
-  section.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (shouldScroll) section.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 abstract.addEventListener("input", () => {
@@ -109,11 +130,17 @@ worker.addEventListener("message", (event) => {
     status.textContent = `Ready · EGU${String(message.year).slice(-2)} · ${String(message.backend).toUpperCase()} · text remains on this device`;
   }
   if (message.type === "result" && message.id === requestId) {
-    render(message.response as MatchResponse);
+    const expanding = expansionRequest;
+    expansionRequest = false;
+    render(message.response as MatchResponse, !expanding);
     submit.disabled = false;
-    status.textContent = "Matching complete. Your text was processed only in this browser.";
+    status.textContent = expanding
+      ? "Additional candidates displayed from the same private match."
+      : "Matching complete. Your text was processed only in this browser.";
   }
   if ((message.type === "error" || message.type === "fatal") && (!message.id || message.id === requestId)) {
+    expansionRequest = false;
+    if (lastResponse) updateMoreControl(lastResponse);
     status.textContent = message.message;
     submit.disabled = !ready;
   }
@@ -123,11 +150,29 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   if (!ready || !abstract.value.trim()) return;
   requestId += 1;
+  lastResponse = null;
+  lastInput = { title: title.value, abstract: abstract.value };
+  expansionRequest = false;
+  moreResultsWrap.hidden = true;
   submit.disabled = true;
   status.textContent = "Embedding and comparing your abstract locally…";
   worker.postMessage({
     type: "rank",
     id: requestId,
-    input: { title: title.value, abstract: abstract.value },
+    input: lastInput,
   });
+});
+
+moreResults.addEventListener("click", () => {
+  if (!ready || !lastResponse || !lastInput) return;
+  const total = lastResponse.selection.predictionSetSize;
+  if (total === undefined) return;
+  const topK = Math.min(lastResponse.selection.shownCount + 10, total);
+  if (topK <= lastResponse.selection.shownCount) return;
+  requestId += 1;
+  expansionRequest = true;
+  moreResults.disabled = true;
+  submit.disabled = true;
+  status.textContent = "Reusing the private match to reveal more candidates…";
+  worker.postMessage({ type: "rank", id: requestId, input: lastInput, topK });
 });

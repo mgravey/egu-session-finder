@@ -19,6 +19,7 @@ data/
 
 web/node_modules/
 web/dist/
+web/coverage/
 *.tsbuildinfo
 web/public/models/*
 !web/public/models/.gitkeep

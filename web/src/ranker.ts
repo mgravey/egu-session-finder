@@ -184,8 +184,8 @@ export class SessionRanker {
         mode: topK === undefined && calibration ? "dynamic" : "fixed",
         shownCount,
         predictionSetSize,
-        targetCoverage: topK === undefined ? calibration?.targetCoverage : undefined,
-        calibrationYear: topK === undefined ? calibration?.calibrationYear : undefined,
+        targetCoverage: calibration?.targetCoverage,
+        calibrationYear: calibration?.calibrationYear,
         truncated,
       },
       results: order.slice(0, shownCount).map((index, rank) => {

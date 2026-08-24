@@ -109,6 +109,32 @@ describe("SessionRanker", () => {
     expect(response.results).toHaveLength(1);
   });
 
+  it("expands a calibrated set with an explicit topK while retaining its metadata", () => {
+    const input = catalogue();
+    input.manifest.predictionSet = {
+      method: "top-score-gap",
+      score: "fixture",
+      candidatePolicy: "typical-scientific-only",
+      calibrationYear: 2024,
+      calibrationExamples: 100,
+      targetCoverage: 0.8,
+      maxScoreGap: 0.15,
+      minResults: 1,
+      maxResults: 1,
+    };
+    const response = new SessionRanker(input).rank(
+      { abstract: "Cloud research" },
+      new Float32Array([0.9, 0.8]),
+      2,
+    );
+    expect(response.selection.mode).toBe("fixed");
+    expect(response.selection.predictionSetSize).toBe(2);
+    expect(response.selection.targetCoverage).toBe(0.8);
+    expect(response.selection.calibrationYear).toBe(2024);
+    expect(response.selection.truncated).toBe(false);
+    expect(response.results).toHaveLength(2);
+  });
+
   it("ranks packed multi-vector session fields", () => {
     const input = catalogue();
     input.manifest.scoring = {

@@ -17,6 +17,8 @@ let extractor: Extractor;
 let tokenizer: any;
 let backend = "wasm";
 let queryMetric: Float32Array | null = null;
+let cachedInputKey: string | null = null;
+let cachedQuery: Float32Array | MultiVectorQuery | null = null;
 const appBase = new URL("../", self.location.href);
 
 function status(message: string): void {
@@ -210,6 +212,42 @@ async function initialize(): Promise<void> {
   });
 }
 
+async function inputKey(input: MatchInput): Promise<string> {
+  const text = `${input.title?.trim() ?? ""}\u0000${input.abstract.trim()}`;
+  return sha256(new TextEncoder().encode(text).buffer as ArrayBuffer);
+}
+
+async function queryFor(input: MatchInput): Promise<Float32Array | MultiVectorQuery> {
+  const key = await inputKey(input);
+  if (cachedInputKey === key && cachedQuery) {
+    status("Reusing the current on-device match…");
+    return cachedQuery;
+  }
+  let query: Float32Array | MultiVectorQuery;
+  if (manifest.scoring.kind === "multivector") {
+    const values = await embedMultiVector(input);
+    if (manifest.metric) {
+      if (!queryMetric) throw new Error("The learned query metric is unavailable.");
+      values.joint = transformQueryMetric(values.joint, queryMetric, manifest.metric);
+      values.title = transformQueryMetric(values.title, queryMetric, manifest.metric);
+      values.chunks = values.chunks.map((chunk) =>
+        transformQueryMetric(chunk, queryMetric!, manifest.metric!),
+      );
+    }
+    query = values;
+  } else {
+    let vector = await embed(input);
+    if (manifest.metric) {
+      if (!queryMetric) throw new Error("The learned query metric is unavailable.");
+      vector = transformQueryMetric(vector, queryMetric, manifest.metric);
+    }
+    query = vector;
+  }
+  cachedInputKey = key;
+  cachedQuery = query;
+  return query;
+}
+
 const initialization = initialize();
 
 self.addEventListener("message", async (event: MessageEvent) => {
@@ -218,26 +256,7 @@ self.addEventListener("message", async (event: MessageEvent) => {
   try {
     await initialization;
     const input = message.input as MatchInput;
-    let query: Float32Array | MultiVectorQuery;
-    if (manifest.scoring.kind === "multivector") {
-      const values = await embedMultiVector(input);
-      if (manifest.metric) {
-        if (!queryMetric) throw new Error("The learned query metric is unavailable.");
-        values.joint = transformQueryMetric(values.joint, queryMetric, manifest.metric);
-        values.title = transformQueryMetric(values.title, queryMetric, manifest.metric);
-        values.chunks = values.chunks.map((chunk) =>
-          transformQueryMetric(chunk, queryMetric!, manifest.metric!),
-        );
-      }
-      query = values;
-    } else {
-      let vector = await embed(input);
-      if (manifest.metric) {
-        if (!queryMetric) throw new Error("The learned query metric is unavailable.");
-        vector = transformQueryMetric(vector, queryMetric, manifest.metric);
-      }
-      query = vector;
-    }
+    const query = await queryFor(input);
     status("Ranking the current programme entirely on this device…");
     const response = ranker.rank(input, query, message.topK);
     self.postMessage({ type: "result", id: message.id, response });

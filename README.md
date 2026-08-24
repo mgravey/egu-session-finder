@@ -469,6 +469,11 @@ necessary. Supplying `topK` explicitly retains deterministic fixed-count
 behavior. A calibration artifact must only be bundled with the exact scorer
 that generated its score matrices.
 
+When a calibrated set is larger than the initial display cap, the website
+offers a **Show 10 more** control until the complete set is visible. Expansion
+reuses the query embedding held only in the current Web Worker memory; it does
+not re-embed the abstract, persist it, or transmit it in a request.
+
 ### Build the fully static website
 
 The selected multi-vector scorer is exported as packed float16 session vectors;
