@@ -1,7 +1,7 @@
 # Changes
 
-- Moved the color spectrum for sessions with four or more divisions from the
-  top edge to equal vertical segments on the left edge.
+- Moved every session's division spectrum to equal vertical segments on the
+  left edge and removed the division-count limit from background gradients.
 - Made result rendering backward-compatible with an already-running pre-update
   Web Worker during Vite hot reloads.
 - Prevented the offline service worker from caching localhost development

@@ -482,12 +482,11 @@ shape during the first reload of an already-open development tab.
 
 Each result card uses stable division colors as restrained translucent
 presentation metadata; they never enter embedding, scoring, calibration, or
-ranking. The session-code prefix identifies the host division. For sessions
-co-organised by two or three divisions, the card background blends their colors
-and a segmented top rule preserves the exact membership. For sessions spanning
-four or more divisions, the host tint remains dominant while equal color
-segments run vertically down the left edge, scaling cleanly to every
-participating division. Compact division codes and the official
+ranking. The session-code prefix identifies the host division. Every card
+background blends all participating division colors without a count threshold,
+and equal color segments run vertically down the left edge for every session.
+This scales from a single host division through the current 15-division
+maximum. Compact division codes and the official
 `Co-organized by` label remain visible, so color is never the only signal.
 
 The public interface is split into two static pages: `index.html` contains the

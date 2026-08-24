@@ -43,33 +43,28 @@ function cardDivisionStyle(item: HTMLElement, colors: string[]): void {
   const safeColors = colors.length ? colors : ["#52656f"];
   const primary = safeColors[0];
   item.style.setProperty("--division", primary);
-  if (safeColors.length <= 3) {
-    const stops = safeColors.map((color, index) => {
-      const position = safeColors.length === 1 ? 0 : (index / (safeColors.length - 1)) * 100;
-      return `${transparentDivisionColor(color, index === 0 ? 0.18 : 0.13)} ${position}%`;
-    });
-    stops.push(`${transparentDivisionColor(safeColors.at(-1)!, 0.045)} 100%`);
-    item.style.setProperty("--session-background", `linear-gradient(110deg, ${stops.join(", ")})`);
-  } else {
-    item.classList.add("many-divisions");
-    item.style.setProperty(
-      "--session-background",
-      `linear-gradient(110deg, ${transparentDivisionColor(primary, 0.18)}, ${transparentDivisionColor(primary, 0.045)})`,
-    );
+  const backgroundStops = safeColors.map((color, index) => {
+    const position = safeColors.length === 1 ? 0 : (index / (safeColors.length - 1)) * 100;
+    return `${transparentDivisionColor(color, index === 0 ? 0.18 : 0.13)} ${position}%`;
+  });
+  if (safeColors.length === 1) {
+    backgroundStops.push(`${transparentDivisionColor(primary, 0.045)} 100%`);
   }
-  if (safeColors.length > 1) {
-    item.classList.add("multi-division");
-    const width = 100 / safeColors.length;
-    const segments = safeColors.flatMap((color, index) => [
-      `${color} ${(index * width).toFixed(3)}%`,
-      `${color} ${((index + 1) * width).toFixed(3)}%`,
-    ]);
-    const direction = safeColors.length > 3 ? "180deg" : "90deg";
-    item.style.setProperty(
-      "--division-spectrum",
-      `linear-gradient(${direction}, ${segments.join(", ")})`,
-    );
-  }
+  item.style.setProperty(
+    "--session-background",
+    `linear-gradient(110deg, ${backgroundStops.join(", ")})`,
+  );
+
+  item.classList.add("division-rail");
+  const width = 100 / safeColors.length;
+  const segments = safeColors.flatMap((color, index) => [
+    `${color} ${(index * width).toFixed(3)}%`,
+    `${color} ${((index + 1) * width).toFixed(3)}%`,
+  ]);
+  item.style.setProperty(
+    "--division-spectrum",
+    `linear-gradient(180deg, ${segments.join(", ")})`,
+  );
 }
 
 function updateMoreControl(response: MatchResponse): void {
