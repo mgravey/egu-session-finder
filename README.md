@@ -479,6 +479,12 @@ Each result card uses the session division color as a restrained translucent
 background and edge accent. Division colors are presentation metadata only and
 never enter embedding, scoring, calibration, or ranking.
 
+The public interface is split into two static pages: `index.html` contains the
+matcher and results, while `method.html` documents data collection, historical
+joins, leakage prevention, temporal evaluation, multi-vector scoring,
+prediction-set calibration, browser inference, privacy, and limitations. Vite
+builds both entries together; neither page requires an application server.
+
 ### Build the fully static website
 
 The selected multi-vector scorer is exported as packed float16 session vectors;

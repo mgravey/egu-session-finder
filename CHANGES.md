@@ -1,5 +1,8 @@
 # Changes
 
+- Moved the explanation out of the matcher and added a dedicated static method
+  page covering construction, ranking, temporal evaluation, browser deployment,
+  privacy, and limitations.
 - Replaced the small division dot with an accessible translucent division-color
   treatment across each result card for faster visual programme recognition.
 - Made incremental result expansion available through the complete ranked

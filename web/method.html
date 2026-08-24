@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f3f1e9" />
+    <meta name="description" content="How the private EGU Session Finder was constructed, evaluated, calibrated, and exported for browser inference." />
+    <meta property="og:title" content="Method · EGU Session Finder" />
+    <meta property="og:description" content="From historical EGU programmes to a private, calibrated browser matcher." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <title>Method · EGU Session Finder</title>
+  </head>
+  <body class="method-page">
+    <div class="page-grid" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="EGU Session Finder home">
+        <span class="brand-mark">ES</span><span>EGU Session Finder</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="./index.html#matcher">Matcher</a><a href="./method.html" aria-current="page">Method</a><a href="./index.html#privacy">Privacy</a>
+      </nav>
+      <a class="catalogue-chip catalogue-link" href="./index.html#matcher"><span class="live-dot"></span>Open matcher</a>
+    </header>
+
+    <main id="top">
+      <section class="method-hero" aria-labelledby="method-page-title">
+        <div>
+          <p class="eyebrow"><span>Transparent by design</span></p>
+          <h1 id="method-page-title">How the matcher<br /><em>was built.</em></h1>
+          <p class="intro">The system turns historical EGU programmes into a rigorously evaluated retrieval model, then packages only the small model and current programme as static browser assets.</p>
+        </div>
+        <aside class="method-summary" aria-label="Project summary">
+          <p class="card-kicker">At a glance</p>
+          <dl>
+            <div><dt>121,971</dt><dd>historical abstracts prepared</dd></div>
+            <div><dt>786</dt><dd>typical EGU26 sessions ranked</dd></div>
+            <div><dt>384</dt><dd>dimensions per base embedding</dd></div>
+            <div><dt>0</dt><dd>submitted words sent to a server</dd></div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="method-section" aria-labelledby="runtime-title">
+        <div class="section-number" aria-hidden="true">01</div>
+        <div class="section-heading">
+          <p class="eyebrow">For one new abstract</p>
+          <h2 id="runtime-title">What happens in your browser</h2>
+          <p>Every inference step stays on the device. The server provides static files but never receives the submitted title or abstract.</p>
+        </div>
+        <ol class="pipeline-list">
+          <li><span>01</span><div><h3>Read several views of the text</h3><p>The title, complete title-plus-abstract, and tokenizer-aware specialist passages are read separately. Long abstracts use overlapping chunks instead of silently losing the ending.</p></div></li>
+          <li><span>02</span><div><h3>Create semantic vectors</h3><p>A quantized MiniLM transformer uses attention layers and mean pooling to create normalized 384-dimensional representations. A compact learned query transformation adapts them to EGU retrieval.</p></div></li>
+          <li><span>03</span><div><h3>Compare every scientific session</h3><p>The query views are compared with precomputed title and description vectors for all 786 typical EGU26 sessions. Special events such as medals, short courses, town halls, and administrative sessions are excluded.</p></div></li>
+          <li><span>04</span><div><h3>Combine five relevance signals</h3><p>The scorer combines joint text similarity, title-to-title, title-to-description, passage-to-title, and passage-to-description matches using weights learned on past assignments.</p></div></li>
+          <li><span>05</span><div><h3>Adapt the number of suggestions</h3><p>A validation-calibrated score-gap rule returns a short set for focused abstracts and a broader set for ambiguous ones. You can still reveal the next ten sessions through the complete ranking.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="formula-section" aria-labelledby="score-title">
+        <div>
+          <p class="eyebrow">Ranking, not classification</p>
+          <h2 id="score-title">The score is comparative</h2>
+          <p>Each cosine term measures the angle between two normalized vectors. The learned non-negative weights determine how much each scientific view contributes.</p>
+        </div>
+        <div class="formula-card">
+          <code>cos(q, s) = (q · s) / (‖q‖₂ ‖s‖₂)</code>
+          <code>score = Σᵢ wᵢ × similarityᵢ</code>
+          <p>The value is useful for ordering sessions, but it is not the probability that a session is “correct.” Close leading scores indicate genuine ambiguity.</p>
+        </div>
+      </section>
+
+      <section class="method-section" aria-labelledby="construction-title">
+        <div class="section-number" aria-hidden="true">02</div>
+        <div class="section-heading">
+          <p class="eyebrow">Historical construction</p>
+          <h2 id="construction-title">From programme pages to training pairs</h2>
+          <p>The preparation pipeline is deliberately separate from the public site. It can be computationally expensive; the exported matcher remains compact.</p>
+        </div>
+        <div class="construction-grid">
+          <article><span>A</span><h3>Cache the programmes</h3><p>Session pages for 2020–2026 were collected gently and cached locally, with parsers for the different historical page layouts.</p></article>
+          <article><span>B</span><h3>Recover abstracts</h3><p>Crossref records with Copernicus EGU DOI prefixes provide titles and abstracts. Original source-file and line locations remain traceable.</p></article>
+          <article><span>C</span><h3>Join accepted assignments</h3><p>Abstract identifiers from programme pages link each abstract to its recorded session. Multiple valid assignments are preserved instead of forcing one label.</p></article>
+          <article><span>D</span><h3>Prevent leakage</h3><p>Session representations contain only official code, division, title, and description—never abstracts already accepted into that session.</p></article>
+        </div>
+      </section>
+
+      <section class="evaluation-section" aria-labelledby="evaluation-title">
+        <div class="evaluation-copy">
+          <p class="eyebrow">Evaluation through time</p>
+          <h2 id="evaluation-title">Past years keep their roles</h2>
+          <p>Training and model choice never see the future. Sparse 2020–2021 public assignments are retained only as auxiliary catalogues.</p>
+        </div>
+        <div class="split-grid" aria-label="Temporal evaluation split">
+          <article><strong>2022–23</strong><span>Training</span><p>Learn retrieval transformations and ranking weights.</p></article>
+          <article><strong>2024</strong><span>Validation</span><p>Select the scorer and calibrate the 80% prediction set.</p></article>
+          <article><strong>2025</strong><span>Sealed test</span><p>Measure generalization only after model selection.</p></article>
+          <article><strong>2026</strong><span>Forward check</span><p>Confirm behavior and build the current catalogue.</p></article>
+        </div>
+        <div class="coverage-strip" aria-label="Dynamic shortlist evaluation">
+          <div><strong>80.3%</strong><span>EGU24 coverage</span><small>median set 10</small></div>
+          <div><strong>81.4%</strong><span>EGU25 coverage</span><small>median set 10</small></div>
+          <div><strong>80.8%</strong><span>EGU26 coverage</span><small>median set 11</small></div>
+        </div>
+        <p class="method-caveat"><strong>Coverage</strong> means at least one historically recorded assignment appears in the calibrated set. It does not mean that assignment was uniquely correct; authors and conveners can reasonably choose different interdisciplinary homes.</p>
+      </section>
+
+      <section class="browser-build" aria-labelledby="browser-title">
+        <div>
+          <p class="eyebrow">Static deployment</p>
+          <h2 id="browser-title">Expensive preparation.<br />Lightweight use.</h2>
+        </div>
+        <div class="browser-build-copy">
+          <p>The selected model is exported to quantized ONNX. Session vectors are prepared once, stored compactly as float16, and verified by checksum when loaded.</p>
+          <ul>
+            <li><strong>Web Worker</strong><span>keeps the interface responsive</span></li>
+            <li><strong>WebGPU</strong><span>preferred local acceleration</span></li>
+            <li><strong>WebAssembly</strong><span>compatible CPU fallback</span></li>
+            <li><strong>Static cache</strong><span>supports later offline inference</span></li>
+          </ul>
+          <p>No API endpoint receives the abstract. The only network requests fetch immutable application, model, and catalogue assets.</p>
+        </div>
+      </section>
+
+      <section class="limitations" aria-labelledby="limits-title">
+        <p class="eyebrow">Use with scientific judgment</p>
+        <h2 id="limits-title">What the matcher cannot decide</h2>
+        <div class="limitations-grid">
+          <p>Historical assignments are imperfect labels: some abstracts could fit several sessions, and some may have been submitted strategically or incorrectly.</p>
+          <p>Similarity does not account for conveners’ unpublished preferences, late programme changes, invitation status, or author eligibility.</p>
+          <p>Always read the official description and submission rules. The tool supports navigation; it does not replace the programme or make a submission decision.</p>
+        </div>
+      </section>
+
+      <section class="method-cta">
+        <div><p class="eyebrow">Try the current catalogue</p><h2>Bring your abstract.</h2></div>
+        <a class="primary-link" href="./index.html#matcher">Open the matcher <span>↗</span></a>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>EGU Session Finder</strong><p>An independent research prototype. Not an official EGU submission service.</p></div>
+      <div class="footer-links">
+        <a href="./index.html#matcher">Matcher →</a>
+        <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2" target="_blank" rel="noopener noreferrer">Model provenance ↗</a>
+        <a href="https://meetingorganizer.copernicus.org/EGU26/sessionprogramme/pg-selection" target="_blank" rel="noopener noreferrer">Official programme ↗</a>
+      </div>
+    </footer>
+    <script type="module" src="/src/method.ts"></script>
+  </body>
+</html>
