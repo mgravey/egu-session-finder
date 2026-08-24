@@ -14,51 +14,32 @@
     <meta name="twitter:description" content="Match an abstract to the EGU programme without sending the text to a server." />
     <title>EGU Session Finder · Private on-device matching</title>
   </head>
-  <body>
+  <body class="home-page">
     <div class="page-grid" aria-hidden="true"></div>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="EGU Session Finder home">
         <span class="brand-mark">ES</span><span>EGU Session Finder</span>
       </a>
       <nav aria-label="Main navigation">
-        <a href="#matcher">Matcher</a><a href="./method.html">Method</a><a href="#privacy">Privacy</a>
+        <a href="#matcher" aria-current="page">Matcher</a><a href="./method.html">Method</a><a href="./privacy.html">Privacy</a>
       </nav>
       <span class="catalogue-chip"><span class="live-dot"></span>EGU<span data-catalogue-year>26</span> catalogue</span>
     </header>
 
     <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow"><span>Scientific programme navigation</span></p>
-          <h1 id="hero-title">Your abstract,<br /><em>in the right room.</em></h1>
-          <p class="intro">Compare your title and abstract with the current EGU programme. The matcher returns a focused, evidence-calibrated shortlist while keeping every word on your device.</p>
-          <div class="hero-actions">
-            <a class="primary-link" href="#matcher">Find matching sessions <span>↓</span></a>
-            <p>No account · No upload · No tracking</p>
-          </div>
+      <section id="matcher" class="matcher-landing" aria-labelledby="matcher-title">
+        <div class="landing-intro">
+          <p class="eyebrow"><span>EGU26 session finder</span></p>
+          <h1 id="matcher-title">Find the right session<br /><em>for your abstract.</em></h1>
+          <p class="intro">Paste your title and abstract to compare them directly with <span data-session-count>786</span> scientific sessions. The text stays on this device.</p>
+          <p class="landing-meta"><span>Private browser inference</span><span>3–20 calibrated suggestions</span><span>Official session links</span></p>
         </div>
-        <aside class="model-card" aria-label="Matcher facts">
-          <p class="card-kicker">Current matcher</p>
-          <div class="model-stat"><strong data-session-count>786</strong><span>scientific sessions compared</span></div>
-          <div class="model-stat"><strong>80%</strong><span>target historical assignment coverage</span></div>
-          <div class="model-stat"><strong>3–20</strong><span>suggestions, adapted to ambiguity</span></div>
-          <p class="model-note">Multi-vector MiniLM · calibrated on EGU24 · evaluated through EGU26</p>
-        </aside>
-      </section>
-
-      <section id="matcher" class="matcher-section" aria-labelledby="matcher-title">
-        <div class="section-number" aria-hidden="true">01</div>
-        <div class="section-heading">
-          <p class="eyebrow">Private session matching</p>
-          <h2 id="matcher-title">Paste your abstract</h2>
-          <p>Use the final title and abstract if available. Nothing entered here leaves this browser.</p>
-        </div>
-        <form id="matcher-form" class="composer">
+        <form id="matcher-form" class="composer landing-composer">
           <div class="field-heading"><label for="title">Abstract title <span>optional, but helpful</span></label></div>
           <input id="title" name="title" type="text" autocomplete="off" maxlength="1000" placeholder="e.g. Compound flood hazards in rapidly changing alpine catchments" />
           <div class="field-heading abstract-heading"><label for="abstract">Abstract</label><span id="character-count">0 / 30,000</span></div>
-          <textarea id="abstract" name="abstract" rows="13" maxlength="30000" required placeholder="Paste the scientific abstract here…"></textarea>
-          <div class="privacy-inline"><span class="privacy-symbol" aria-hidden="true">◎</span><p><strong>Processed locally.</strong> Your text is not uploaded, logged, or saved.</p></div>
+          <textarea id="abstract" name="abstract" rows="10" maxlength="30000" required placeholder="Paste the scientific abstract here…"></textarea>
+          <div class="privacy-inline"><span class="privacy-symbol" aria-hidden="true">◎</span><p><strong>Processed locally.</strong> Your text is not uploaded, logged, or saved. <a href="./privacy.html">How privacy works →</a></p></div>
           <div class="form-footer">
             <p id="status" role="status">Preparing the EGU catalogue and local language model…</p>
             <button id="submit" type="submit" disabled><span>Match sessions</span><span aria-hidden="true">↗</span></button>
@@ -82,19 +63,13 @@
         <p class="decision-note">Treat this as navigation support, not an automatic submission decision. Read each description and confirm the current call on the official programme page.</p>
       </section>
 
-      <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
-        <div><p class="eyebrow">Privacy by architecture</p><h2 id="privacy-title">Static files in.<br />No abstract out.</h2></div>
-        <div class="privacy-copy">
-          <p>The website downloads a quantized model and precomputed session catalogue. Inference runs in a background browser worker using WebGPU when available and WebAssembly as a fallback.</p>
-          <ul><li>No server-side inference</li><li>No analytics or telemetry</li><li>No form submission or account</li><li>Offline use after static assets are cached</li></ul>
-        </div>
-      </section>
     </main>
 
     <footer>
       <div><strong>EGU Session Finder</strong><p>An independent research prototype. Not an official EGU submission service.</p></div>
       <div class="footer-links">
         <a href="./method.html">Method &amp; construction →</a>
+        <a href="./privacy.html">Privacy →</a>
         <a href="https://www.egu26.eu/" target="_blank" rel="noopener noreferrer">EGU26 website ↗</a>
         <a href="https://meetingorganizer.copernicus.org/EGU26/sessionprogramme/pg-selection" target="_blank" rel="noopener noreferrer">Official programme ↗</a>
       </div>

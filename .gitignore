@@ -27,6 +27,7 @@ web/.rollup.cache/
 web/.vite-inspect/
 web/.eslintcache
 web/.stylelintcache
+web/.htmlvalidatecache
 *.tsbuildinfo
 web/public/models/*
 !web/public/models/.gitkeep

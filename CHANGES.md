@@ -1,5 +1,8 @@
 # Changes
 
+- Rebuilt the landing page around the abstract form so the primary task appears
+  immediately, moved privacy details to a dedicated static page, and typeset
+  the scoring formulas with semantic MathML.
 - Moved every session's division spectrum to equal vertical segments on the
   left edge and removed the division-count limit from background gradients.
 - Made result rendering backward-compatible with an already-running pre-update

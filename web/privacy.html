@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f3f1e9" />
+    <meta name="description" content="How EGU Session Finder keeps submitted abstracts private through fully local browser inference." />
+    <meta property="og:title" content="Privacy · EGU Session Finder" />
+    <meta property="og:description" content="Static assets enter the browser; submitted abstract text never leaves it." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <title>Privacy · EGU Session Finder</title>
+  </head>
+  <body class="privacy-page">
+    <div class="page-grid" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="EGU Session Finder home">
+        <span class="brand-mark">ES</span><span>EGU Session Finder</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="./index.html#matcher">Matcher</a><a href="./method.html">Method</a><a href="./privacy.html" aria-current="page">Privacy</a>
+      </nav>
+      <a class="catalogue-chip catalogue-link" href="./index.html#matcher"><span class="live-dot"></span>Open matcher</a>
+    </header>
+
+    <main id="top">
+      <section class="privacy-hero" aria-labelledby="privacy-page-title">
+        <div>
+          <p class="eyebrow"><span>Privacy by architecture</span></p>
+          <h1 id="privacy-page-title">Your abstract<br /><em>stays with you.</em></h1>
+          <p class="intro">The matcher is a static website. It downloads the tools needed for inference, then processes the title and abstract entirely inside your browser.</p>
+        </div>
+        <aside class="method-summary" aria-label="Privacy summary">
+          <p class="card-kicker">At a glance</p>
+          <dl>
+            <div><dt>0</dt><dd>submitted words sent to an inference server</dd></div>
+            <div><dt>0</dt><dd>accounts, analytics, or tracking scripts</dd></div>
+            <div><dt>1</dt><dd>temporary in-memory query representation</dd></div>
+            <div><dt>∞</dt><dd>offline matches after assets are cached</dd></div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="privacy-section privacy-page-summary" aria-labelledby="architecture-title">
+        <div><p class="eyebrow">The core guarantee</p><h2 id="architecture-title">Static files in.<br />No abstract out.</h2></div>
+        <div class="privacy-copy">
+          <p>The browser fetches the application, a quantized MiniLM model, the current session catalogue, and precomputed session vectors. A background Web Worker performs embedding and ranking locally.</p>
+          <ul><li>No server-side inference</li><li>No analytics or telemetry</li><li>No form submission or account</li><li>No abstract in persistent storage</li></ul>
+        </div>
+      </section>
+
+      <section class="privacy-details" aria-labelledby="data-title">
+        <div class="section-heading">
+          <p class="eyebrow">Data boundaries</p>
+          <h2 id="data-title">What enters, what remains, what leaves</h2>
+        </div>
+        <div class="privacy-details-grid">
+          <article><span>01</span><h3>Downloaded</h3><p>Static HTML, CSS, JavaScript, the browser-compatible model, session metadata, and session vectors.</p></article>
+          <article><span>02</span><h3>Kept in memory</h3><p>Your title, abstract, tokens, embeddings, and latest ranking exist only in the current page and Web Worker memory.</p></article>
+          <article><span>03</span><h3>Never transmitted</h3><p>The submitted title, abstract, derived query embedding, selected results, and scientific topic are not placed in a request.</p></article>
+          <article><span>04</span><h3>Cached for offline use</h3><p>Only static application, model, and catalogue assets are cached. Submitted text and results are excluded.</p></article>
+        </div>
+      </section>
+
+      <section class="privacy-verification" aria-labelledby="verify-title">
+        <div><p class="eyebrow">Inspectable behavior</p><h2 id="verify-title">A guarantee you can verify</h2></div>
+        <div>
+          <p>Open the browser network panel before matching. Requests fetch only static site assets; pressing “Match sessions” does not send the abstract anywhere.</p>
+          <p>The source contains no analytics integration, telemetry endpoint, account system, or server-side inference route. Closing or reloading the page discards the query held in memory.</p>
+        </div>
+      </section>
+
+      <section class="method-cta">
+        <div><p class="eyebrow">Private by default</p><h2>Ready to find a session?</h2></div>
+        <a class="primary-link" href="./index.html#matcher">Open the matcher <span>↗</span></a>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>EGU Session Finder</strong><p>An independent research prototype. Not an official EGU submission service.</p></div>
+      <div class="footer-links">
+        <a href="./index.html#matcher">Matcher →</a>
+        <a href="./method.html">Method →</a>
+        <a href="https://meetingorganizer.copernicus.org/EGU26/sessionprogramme/pg-selection" target="_blank" rel="noopener noreferrer">Official programme ↗</a>
+      </div>
+    </footer>
+    <script type="module" src="/src/method.ts"></script>
+  </body>
+</html>

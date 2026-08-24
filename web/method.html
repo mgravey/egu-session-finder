@@ -19,7 +19,7 @@
         <span class="brand-mark">ES</span><span>EGU Session Finder</span>
       </a>
       <nav aria-label="Main navigation">
-        <a href="./index.html#matcher">Matcher</a><a href="./method.html" aria-current="page">Method</a><a href="./index.html#privacy">Privacy</a>
+        <a href="./index.html#matcher">Matcher</a><a href="./method.html" aria-current="page">Method</a><a href="./privacy.html">Privacy</a>
       </nav>
       <a class="catalogue-chip catalogue-link" href="./index.html#matcher"><span class="live-dot"></span>Open matcher</a>
     </header>
@@ -65,8 +65,21 @@
           <p>Each cosine term measures the angle between two normalized vectors. The learned non-negative weights determine how much each scientific view contributes.</p>
         </div>
         <div class="formula-card">
-          <code>cos(q, s) = (q · s) / (‖q‖₂ ‖s‖₂)</code>
-          <code>score = Σᵢ wᵢ × similarityᵢ</code>
+          <math class="equation" display="block" aria-label="Cosine of q and s equals q dot s divided by the product of their L2 norms">
+            <mrow>
+              <mi>cos</mi><mo>(</mo><mi>q</mi><mo>,</mo><mi>s</mi><mo>)</mo><mo>=</mo>
+              <mfrac>
+                <mrow><mi>q</mi><mo>·</mo><mi>s</mi></mrow>
+                <mrow><msub><mrow><mo>‖</mo><mi>q</mi><mo>‖</mo></mrow><mn>2</mn></msub><mo>⁢</mo><msub><mrow><mo>‖</mo><mi>s</mi><mo>‖</mo></mrow><mn>2</mn></msub></mrow>
+              </mfrac>
+            </mrow>
+          </math>
+          <math class="equation" display="block" aria-label="Score equals the sum over i of weight i times similarity i">
+            <mrow>
+              <mi>score</mi><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder>
+              <msub><mi>w</mi><mi>i</mi></msub><mo>⁢</mo><msub><mi>similarity</mi><mi>i</mi></msub>
+            </mrow>
+          </math>
           <p>The value is useful for ordering sessions, but it is not the probability that a session is “correct.” Close leading scores indicate genuine ambiguity.</p>
         </div>
       </section>
@@ -143,6 +156,7 @@
       <div><strong>EGU Session Finder</strong><p>An independent research prototype. Not an official EGU submission service.</p></div>
       <div class="footer-links">
         <a href="./index.html#matcher">Matcher →</a>
+        <a href="./privacy.html">Privacy →</a>
         <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2" target="_blank" rel="noopener noreferrer">Model provenance ↗</a>
         <a href="https://meetingorganizer.copernicus.org/EGU26/sessionprogramme/pg-selection" target="_blank" rel="noopener noreferrer">Official programme ↗</a>
       </div>

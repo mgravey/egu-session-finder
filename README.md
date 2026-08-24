@@ -489,11 +489,13 @@ This scales from a single host division through the current 15-division
 maximum. Compact division codes and the official
 `Co-organized by` label remain visible, so color is never the only signal.
 
-The public interface is split into two static pages: `index.html` contains the
-matcher and results, while `method.html` documents data collection, historical
-joins, leakage prevention, temporal evaluation, multi-vector scoring,
-prediction-set calibration, browser inference, privacy, and limitations. Vite
-builds both entries together; neither page requires an application server.
+The public interface is split into three static pages. `index.html` opens
+directly on the abstract matcher and results, `method.html` documents data
+collection, historical joins, leakage prevention, temporal evaluation,
+multi-vector scoring, prediction-set calibration, and browser inference, and
+`privacy.html` explains the browser-only data boundary. The method page uses
+semantic MathML for the cosine and learned-score equations. Vite builds all
+three entries together; none requires an application server.
 
 ### Build the fully static website
 
