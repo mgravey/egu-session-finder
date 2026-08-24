@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:lan": "vite --host 0.0.0.0 --port 5173",
+    "preview:lan": "vite preview --host 0.0.0.0 --port 5173 --strictPort",
     "build": "tsc -b && vite build",
     "test": "vitest run",
     "test:watch": "vitest"

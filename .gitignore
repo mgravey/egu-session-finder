@@ -30,6 +30,7 @@ web/.stylelintcache
 web/.htmlvalidatecache
 web/.lighthouseci/
 web/.vite-profile/
+web/.preview-cache/
 *.tsbuildinfo
 web/public/models/*
 !web/public/models/.gitkeep

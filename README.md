@@ -528,12 +528,13 @@ The production directory is `web/dist`. For EGU27, update the prepared session
 catalogue and multi-vector embeddings, recalibrate if appropriate, then change
 only `--year 2027`.
 
-For temporary feedback sessions on a trusted local network, run
-`npm run dev:lan` from `web` and share the printed network URL. Port 5173 always
-uses network-first development assets, including when opened through a LAN IP,
-so Vite modules and workers cannot be trapped in the offline cache. Plain HTTP
-LAN visitors normally use the browser's WASM fallback because WebGPU requires a
-secure context; no submitted text leaves their device.
+For temporary feedback sessions on a trusted local network, build once and run
+`npm run preview:lan` from `web`, then share the printed network URL. This serves
+the production `dist` files without Vite's development client or hot-reload
+WebSocket. Plain HTTP LAN visitors use the browser's WASM fallback because
+WebGPU and native Web Crypto normally require a secure context. A tested local
+SHA-256 implementation preserves static-asset checksum verification and query
+cache keys in that environment; no submitted text leaves their device.
 
 The supplied historical division-color URL currently returns HTTP 404.
 `config/division_colors.json` records this and defines a stable project-owned,

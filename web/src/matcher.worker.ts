@@ -4,6 +4,7 @@ import { AutoTokenizer, env, pipeline } from "@huggingface/transformers";
 import { SessionRanker, type Catalogue } from "./ranker";
 import { transformQueryMetric } from "./metric";
 import { decodeFloat16 } from "./float16";
+import { sha256 } from "./sha256";
 import type { MatchInput, ModelManifest, MultiVectorQuery, SessionRecord } from "./types";
 
 type Extractor = ((
@@ -23,11 +24,6 @@ const appBase = new URL("../", self.location.href);
 
 function status(message: string): void {
   self.postMessage({ type: "status", message });
-}
-
-async function sha256(buffer: ArrayBuffer): Promise<string> {
-  const value = await crypto.subtle.digest("SHA-256", buffer);
-  return Array.from(new Uint8Array(value), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 async function checkedBuffer(response: Response, expected?: string): Promise<ArrayBuffer> {

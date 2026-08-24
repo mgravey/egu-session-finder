@@ -1,5 +1,7 @@
 # Changes
 
+- Replaced the shared LAN development server with a production-static preview
+  command and added a tested SHA-256 fallback for insecure-context LAN browsers.
 - Added a favicon-first matching-path brand mark across the header, browser
   favicon, and touch icon, and versioned the offline static cache for the new
   identity assets.
