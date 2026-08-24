@@ -1,5 +1,10 @@
 # Changes
 
+- Added a favicon-first matching-path brand mark across the header, browser
+  favicon, and touch icon, and versioned the offline static cache for the new
+  identity assets.
+- Added a reproducible LAN preview command and treated port 5173 as
+  network-first development even when accessed through a non-localhost address.
 - Compacted the matcher landing layout and initial abstract field so the submit
   button is visible without scrolling on a standard laptop viewport.
 - Rebuilt the landing page around the abstract form so the primary task appears

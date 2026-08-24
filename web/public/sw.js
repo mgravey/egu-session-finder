@@ -1,7 +1,6 @@
-const CACHE_NAME = "egu-session-matcher-v4-interdisciplinary";
-const IS_LOCAL_DEVELOPMENT = ["localhost", "127.0.0.1", "::1"].includes(
-  self.location.hostname,
-);
+const CACHE_NAME = "egu-session-matcher-v5-brand";
+const IS_LOCAL_DEVELOPMENT = self.location.port === "5173" ||
+  ["localhost", "127.0.0.1", "::1"].includes(self.location.hostname);
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());

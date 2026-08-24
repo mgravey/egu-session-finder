@@ -498,6 +498,11 @@ multi-vector scoring, prediction-set calibration, and browser inference, and
 semantic MathML for the cosine and learned-score equations. Vite builds all
 three entries together; none requires an application server.
 
+The brand uses a favicon-first matching-path mark generated as a transparent
+raster asset, with dedicated 64 px favicon, 180 px touch icon, and 256 px header
+versions. The converging colored paths echo interdisciplinary session matching
+without borrowing official EGU branding.
+
 ### Build the fully static website
 
 The selected multi-vector scorer is exported as packed float16 session vectors;
@@ -522,6 +527,13 @@ scripts/build_static_site.sh \
 The production directory is `web/dist`. For EGU27, update the prepared session
 catalogue and multi-vector embeddings, recalibrate if appropriate, then change
 only `--year 2027`.
+
+For temporary feedback sessions on a trusted local network, run
+`npm run dev:lan` from `web` and share the printed network URL. Port 5173 always
+uses network-first development assets, including when opened through a LAN IP,
+so Vite modules and workers cannot be trapped in the offline cache. Plain HTTP
+LAN visitors normally use the browser's WASM fallback because WebGPU requires a
+secure context; no submitted text leaves their device.
 
 The supplied historical division-color URL currently returns HTTP 404.
 `config/division_colors.json` records this and defines a stable project-owned,
