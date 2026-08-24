@@ -11,8 +11,48 @@ from typing import Any, Iterable
 
 import numpy as np
 
-from matcher_common import iter_jsonl, sha256_file, write_json
+from matcher_common import (
+    iter_jsonl,
+    primary_division_code,
+    sha256_file,
+    visual_division_codes,
+    write_json,
+)
 from session_categories import is_typical_scientific_session
+
+
+FALLBACK_DIVISION_PALETTE = (
+    "#2563a7", "#0f766e", "#7c3aed", "#c2410c", "#a21caf",
+    "#047857", "#b45309", "#be123c", "#0369a1", "#4d7c0f",
+)
+
+
+def division_color(code: str, colors: dict[str, str]) -> str:
+    if code in colors:
+        return colors[code]
+    index = sum((position + 1) * ord(character) for position, character in enumerate(code))
+    return FALLBACK_DIVISION_PALETTE[index % len(FALLBACK_DIVISION_PALETTE)]
+
+
+def browser_session_presentation(
+    session: dict[str, Any], colors: dict[str, str]
+) -> dict[str, Any]:
+    codes = [str(code) for code in session.get("division_codes", [])]
+    primary = session.get("primary_division_code") or primary_division_code(
+        session.get("session_code"), codes
+    )
+    visual = session.get("visual_division_codes") or visual_division_codes(
+        session.get("session_code"), codes, session.get("co_organizer_codes", [])
+    )
+    visual = [str(code) for code in visual]
+    division_colors = [division_color(code, colors) for code in visual]
+    return {
+        "primaryDivisionCode": primary,
+        "coOrganizerLabel": session.get("co_organizer_label"),
+        "visualDivisionCodes": visual,
+        "divisionColors": division_colors,
+        "color": division_colors[0] if division_colors else "#52656f",
+    }
 
 
 def load_metric_head(path: Path) -> dict[str, Any]:
@@ -188,7 +228,7 @@ def export_catalogue(
                 "descriptionMissing": session["description_missing"],
                 "divisions": session.get("discovery_groups", []),
                 "divisionCodes": codes,
-                "color": next((colors[code] for code in codes if code in colors), None),
+                **browser_session_presentation(session, colors),
                 "url": session["source_url"],
                 **(
                     {"searchText": session["session_text"]}
@@ -201,7 +241,7 @@ def export_catalogue(
     write_json(sessions_output, metadata)
     generated = datetime.now(timezone.utc).isoformat()
     manifest = {
-        "schemaVersion": 3 if prediction_set is not None else (2 if metric is not None else 1),
+        "schemaVersion": 4 if prediction_set is not None else (3 if metric is not None else 2),
         "catalogueYear": year,
         "catalogueVersion": f"EGU{str(year)[-2:]}-{generated[:10]}",
         "generatedAt": generated,

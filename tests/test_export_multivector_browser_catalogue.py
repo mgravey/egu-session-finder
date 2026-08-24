@@ -30,8 +30,12 @@ class MultiVectorBrowserExportTests(unittest.TestCase):
                     "event_code": "EGU26", "event_year": 2026, "session_id": "1",
                     "session_key": "EGU26:1", "session_code": "HS1", "title": "Water",
                     "description": "Hydrology", "description_missing": False,
-                    "discovery_groups": ["Hydrological Sciences (HS)"],
-                    "division_codes": ["HS"], "source_url": "https://example.test/1",
+                    "discovery_groups": ["Atmospheric Sciences (AS)", "Hydrological Sciences (HS)", "Nonlinear Processes in Geosciences (NP)"],
+                    "division_codes": ["AS", "HS", "NP"],
+                    "primary_division_code": "HS", "co_organizer_label": "AS1/NP3",
+                    "co_organizer_codes": ["AS", "NP"],
+                    "visual_division_codes": ["HS", "AS", "NP"],
+                    "source_url": "https://example.test/1",
                 },
                 {
                     "event_code": "EGU26", "event_year": 2026, "session_id": "2",
@@ -88,14 +92,18 @@ class MultiVectorBrowserExportTests(unittest.TestCase):
                     "python_model_id": "fixture", "browser_model_id": "fixture",
                     "browser_model_path": "/models/mini", "revision": "abc", "max_tokens": 8,
                 },
-                colors={"HS": "#123456"}, year=2026, output_dir=output,
+                colors={"HS": "#123456", "AS": "#abcdef", "NP": "#654321"}, year=2026, output_dir=output,
             )
             metadata = json.loads((output / "sessions.json").read_text())
-            self.assertEqual(manifest["schemaVersion"], 4)
+            self.assertEqual(manifest["schemaVersion"], 5)
             self.assertEqual(manifest["sessionCount"], 1)
             self.assertEqual(manifest["scoring"]["multiVector"]["sessionVectorStride"], 4)
             self.assertEqual(metadata[0]["descriptionVectorCount"], 1)
             self.assertEqual(metadata[0]["color"], "#123456")
+            self.assertEqual(metadata[0]["primaryDivisionCode"], "HS")
+            self.assertEqual(metadata[0]["visualDivisionCodes"], ["HS", "AS", "NP"])
+            self.assertEqual(metadata[0]["divisionColors"], ["#123456", "#abcdef", "#654321"])
+            self.assertEqual(metadata[0]["coOrganizerLabel"], "AS1/NP3")
             self.assertEqual(manifest["vectorDtype"], "float16-le")
             self.assertEqual((output / "session-vectors.bin").stat().st_size, 4 * 2 * 2)
 

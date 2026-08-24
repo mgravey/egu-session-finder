@@ -12,6 +12,7 @@ from typing import Any, Iterable
 import numpy as np
 
 from export_browser_catalogue import (
+    browser_session_presentation,
     browser_prediction_set,
     load_metric_head,
     transform_session_vectors,
@@ -99,18 +100,10 @@ def export_multivector_catalogue(
     packed.tofile(temporary)
     temporary.replace(vector_output)
 
-    palette = (
-        "#2563a7", "#0f766e", "#7c3aed", "#c2410c", "#a21caf",
-        "#047857", "#b45309", "#be123c", "#0369a1", "#4d7c0f",
-    )
     metadata = []
     for vector_row, index in enumerate(indices):
         session = sessions[index]
         division_codes = session.get("division_codes", [])
-        fallback_index = sum(ord(character) for code in division_codes for character in code)
-        color = next((colors[code] for code in division_codes if code in colors), None)
-        if color is None:
-            color = palette[fallback_index % len(palette)] if division_codes else "#52656f"
         metadata.append(
             {
                 "vectorRow": vector_row,
@@ -124,7 +117,7 @@ def export_multivector_catalogue(
                 "descriptionVectorCount": int(selected_mask[vector_row].sum()),
                 "divisions": session.get("discovery_groups", []),
                 "divisionCodes": division_codes,
-                "color": color,
+                **browser_session_presentation(session, colors),
                 "url": session["source_url"],
             }
         )
@@ -136,7 +129,7 @@ def export_multivector_catalogue(
     )
     generated = datetime.now(timezone.utc).isoformat()
     manifest: dict[str, Any] = {
-        "schemaVersion": 4,
+        "schemaVersion": 5,
         "catalogueYear": year,
         "catalogueVersion": f"EGU{str(year)[-2:]}-multivector-{generated[:10]}",
         "generatedAt": generated,

@@ -23,6 +23,7 @@ web/coverage/
 web/.vite/
 web/.cache/
 web/.wrangler/
+web/.rollup.cache/
 *.tsbuildinfo
 web/public/models/*
 !web/public/models/.gitkeep

@@ -86,6 +86,33 @@ class CrawlEguSessionsTests(unittest.TestCase):
         self.assertFalse(parsed["description_missing"])
         self.assertEqual(parsed["abstract_codes"], ["EGU26-12", "EGU26-99"])
 
+    def test_parses_multiple_co_organising_divisions(self):
+        html = b"""
+        <html><head><title>Session HS7.2</title></head><body>
+        <div id="sessiondetails"><h1>HS7.2</h1></div>
+        <div class="co_mto_programme-session-block-cosponsoring-coorganizing">
+          Co-organized by AS1/NP3, co-sponsored by WMO
+        </div>
+        </body></html>
+        """
+        parsed = parse_session_page(
+            html,
+            event_code="EGU26",
+            year=2026,
+            session={
+                "session_id": "55706",
+                "url": "https://meetingorganizer.copernicus.org/EGU26/session/55706",
+                "title_hint": "Precipitation modelling",
+                "discovery_groups": [
+                    "Atmospheric Sciences (AS)",
+                    "Hydrological Sciences (HS)",
+                    "Nonlinear Processes in Geosciences (NP)",
+                ],
+            },
+        )
+        self.assertEqual(parsed["co_organizer_label"], "AS1/NP3")
+        self.assertEqual(parsed["co_organizer_codes"], ["AS", "NP"])
+
     def test_parses_custom_element_description_and_heading_code(self):
         html = b"""
         <html><body><div id="sessiondetails">

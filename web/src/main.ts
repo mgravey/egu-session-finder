@@ -32,6 +32,42 @@ function confidenceText(value: "high" | "medium" | "low"): string {
   return "moderate ambiguity";
 }
 
+function transparentDivisionColor(color: string, alpha: number): string {
+  const match = /^#([0-9a-f]{6})$/i.exec(color);
+  if (!match) return `color-mix(in srgb, ${color} ${Math.round(alpha * 100)}%, transparent)`;
+  const value = Number.parseInt(match[1], 16);
+  return `rgba(${value >> 16}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
+}
+
+function cardDivisionStyle(item: HTMLElement, colors: string[]): void {
+  const safeColors = colors.length ? colors : ["#52656f"];
+  const primary = safeColors[0];
+  item.style.setProperty("--division", primary);
+  if (safeColors.length <= 3) {
+    const stops = safeColors.map((color, index) => {
+      const position = safeColors.length === 1 ? 0 : (index / (safeColors.length - 1)) * 100;
+      return `${transparentDivisionColor(color, index === 0 ? 0.18 : 0.13)} ${position}%`;
+    });
+    stops.push(`${transparentDivisionColor(safeColors.at(-1)!, 0.045)} 100%`);
+    item.style.setProperty("--session-background", `linear-gradient(110deg, ${stops.join(", ")})`);
+  } else {
+    item.classList.add("many-divisions");
+    item.style.setProperty(
+      "--session-background",
+      `linear-gradient(110deg, ${transparentDivisionColor(primary, 0.18)}, ${transparentDivisionColor(primary, 0.045)})`,
+    );
+  }
+  if (safeColors.length > 1) {
+    item.classList.add("multi-division");
+    const width = 100 / safeColors.length;
+    const segments = safeColors.flatMap((color, index) => [
+      `${color} ${(index * width).toFixed(3)}%`,
+      `${color} ${((index + 1) * width).toFixed(3)}%`,
+    ]);
+    item.style.setProperty("--division-spectrum", `linear-gradient(90deg, ${segments.join(", ")})`);
+  }
+}
+
 function updateMoreControl(response: MatchResponse): void {
   const total = response.selection.candidateCount;
   const calibratedTotal = response.selection.predictionSetSize;
@@ -69,7 +105,7 @@ function render(response: MatchResponse, shouldScroll = true): void {
   response.results.forEach((match) => {
     const item = document.createElement("li");
     item.className = "result-card";
-    item.style.setProperty("--division", match.color ?? "#52656f");
+    cardDivisionStyle(item, match.divisionColors.length ? match.divisionColors : [match.color ?? "#52656f"]);
 
     const rank = document.createElement("span");
     rank.className = "rank-number";
@@ -87,8 +123,15 @@ function render(response: MatchResponse, shouldScroll = true): void {
     meta.className = "result-meta";
     const division = document.createElement("span");
     division.className = "division-pill";
-    division.textContent = match.divisions.join(" · ") || "Cross-programme session";
+    division.textContent = match.visualDivisionCodes.join(" · ") || "Cross-programme session";
+    division.title = match.divisions.join(" · ");
     meta.append(division);
+    if (match.coOrganizerLabel) {
+      const coOrganizer = document.createElement("span");
+      coOrganizer.className = "coorganizer-label";
+      coOrganizer.textContent = `Co-organised by ${match.coOrganizerLabel}`;
+      meta.append(coOrganizer);
+    }
     content.append(heading, meta);
 
     const score = document.createElement("div");

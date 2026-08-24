@@ -32,7 +32,7 @@
     },
     "sessions": {
       "path": "sessions.json",
-      "sha256": "93c3bef5fa54753d801b1b04d03cd66d425aed1cfd5ab3ec0994f3ff53646556"
+      "sha256": "38a1d6948d7f6cb431fd62b282f6c420eba4d37c10abe4f8c39d208b75477e62"
     },
     "vectors": {
       "path": "session-vectors.bin",
@@ -49,7 +49,7 @@
     "top_score_low": -1.0
   },
   "dimension": 384,
-  "generatedAt": "2026-08-24T06:55:46.502098+00:00",
+  "generatedAt": "2026-08-24T09:38:51.576440+00:00",
   "maxTokens": 256,
   "metric": {
     "dimension": 384,
@@ -102,7 +102,7 @@
     "targetCoverage": 0.8
   },
   "queryPrefix": "",
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "scoring": {
     "bm25": {
       "b": 0.75,

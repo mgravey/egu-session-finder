@@ -18,6 +18,10 @@ export interface RankedSession {
   title: string;
   description?: string;
   divisions: string[];
+  primaryDivisionCode?: string;
+  coOrganizerLabel?: string;
+  visualDivisionCodes: string[];
+  divisionColors: string[];
   color?: string;
   url: string;
   similarity: number;
@@ -63,6 +67,10 @@ export interface SessionRecord {
   descriptionVectorCount?: number;
   divisions: string[];
   divisionCodes: string[];
+  primaryDivisionCode?: string | null;
+  coOrganizerLabel?: string | null;
+  visualDivisionCodes?: string[];
+  divisionColors?: string[];
   color: string | null;
   url: string;
   searchText?: string;

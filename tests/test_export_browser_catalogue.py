@@ -96,7 +96,7 @@ class ExportBrowserCatalogueTests(unittest.TestCase):
             self.assertEqual(len(manifest["assets"]["sessions"]["sha256"]), 64)
             self.assertEqual(len(manifest["assets"]["vectors"]["sha256"]), 64)
             self.assertEqual(metadata[0]["color"], "#123456")
-            self.assertEqual(manifest["schemaVersion"], 3)
+            self.assertEqual(manifest["schemaVersion"], 4)
             self.assertEqual(manifest["predictionSet"]["maxScoreGap"], 0.12)
             self.assertNotIn("evaluations", manifest["predictionSet"])
             np.testing.assert_allclose(vector, [0.6, 0.8])
@@ -208,7 +208,7 @@ class ExportBrowserCatalogueTests(unittest.TestCase):
             np.testing.assert_allclose(
                 transformed, [2 ** -0.5, 2 ** -0.5], atol=1e-6
             )
-            self.assertEqual(manifest["schemaVersion"], 2)
+            self.assertEqual(manifest["schemaVersion"], 3)
             self.assertEqual(manifest["metric"]["kind"], "lowrank")
             self.assertEqual(manifest["assets"]["queryMetric"]["path"], "query-metric.bin")
             self.assertEqual(

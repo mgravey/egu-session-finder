@@ -1,5 +1,12 @@
 # Changes
 
+- Preserved EGU `Co-organized by` metadata and host-division identity through
+  parsing, preparation, static catalogue export, and the browser API.
+- Added scalable interdisciplinary result treatments: blended backgrounds for
+  two or three divisions and a host tint plus segmented programme spectrum for
+  sessions spanning four or more divisions.
+- Replaced per-session fallback colors with a stable, explicitly non-official
+  accessible division palette that remains presentation-only.
 - Moved the explanation out of the matcher and added a dedicated static method
   page covering construction, ranking, temporal evaluation, browser deployment,
   privacy, and limitations.

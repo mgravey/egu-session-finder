@@ -45,7 +45,13 @@ class PrepareMatcherDataTests(unittest.TestCase):
                         "title": "Water",
                         "description": "Hydrology",
                         "abstract_codes": ["EGU24-10"],
-                        "discovery_groups": ["Hydrological Sciences (HS)"],
+                        "discovery_groups": [
+                            "Atmospheric Sciences (AS)",
+                            "Hydrological Sciences (HS)",
+                            "Nonlinear Processes in Geosciences (NP)",
+                        ],
+                        "co_organizer_label": "AS1/NP3",
+                        "co_organizer_codes": ["AS", "NP"],
                     },
                     {
                         "event_code": "EGU24",
@@ -94,7 +100,10 @@ class PrepareMatcherDataTests(unittest.TestCase):
             self.assertEqual(report["totals"]["unmatched_abstracts"], 1)
             self.assertEqual(report["totals"]["abstracts_with_multiple_sessions"], 1)
             self.assertEqual(report["totals"]["programme_abstract_codes_not_in_crossref"], 1)
-            self.assertEqual(prepared_sessions[0]["division_codes"], ["HS"])
+            self.assertEqual(prepared_sessions[0]["division_codes"], ["AS", "HS", "NP"])
+            self.assertEqual(prepared_sessions[0]["primary_division_code"], "HS")
+            self.assertEqual(prepared_sessions[0]["visual_division_codes"], ["HS", "AS", "NP"])
+            self.assertEqual(prepared_sessions[0]["co_organizer_label"], "AS1/NP3")
             self.assertTrue(prepared_sessions[1]["description_missing"])
 
     def test_session_text_never_contains_accepted_abstracts(self):

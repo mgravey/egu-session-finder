@@ -15,7 +15,9 @@ from matcher_common import (
     clean_text,
     division_codes,
     iter_jsonl,
+    primary_division_code,
     session_text,
+    visual_division_codes,
     write_json,
     write_jsonl_gz,
 )
@@ -59,6 +61,12 @@ def prepare(
         if key in session_by_key:
             raise ValueError(f"duplicate session key: {key}")
         groups = [clean_text(item) for item in raw.get("discovery_groups", []) if clean_text(item)]
+        codes = division_codes(groups)
+        co_organizer_codes = [
+            clean_text(item).upper()
+            for item in raw.get("co_organizer_codes", [])
+            if clean_text(item).upper() in codes
+        ]
         record = {
             **raw,
             "event_code": event_code,
@@ -70,7 +78,13 @@ def prepare(
             "description": clean_text(raw.get("description")) or None,
             "description_missing": not bool(clean_text(raw.get("description"))),
             "discovery_groups": groups,
-            "division_codes": division_codes(groups),
+            "division_codes": codes,
+            "primary_division_code": primary_division_code(raw.get("session_code"), codes),
+            "co_organizer_label": clean_text(raw.get("co_organizer_label")) or None,
+            "co_organizer_codes": list(dict.fromkeys(co_organizer_codes)),
+            "visual_division_codes": visual_division_codes(
+                raw.get("session_code"), codes, co_organizer_codes
+            ),
         }
         record["session_text"] = session_text(record, include_divisions=True)
         record["session_text_without_divisions"] = session_text(

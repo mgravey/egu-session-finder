@@ -1,6 +1,33 @@
 {
-  "source": "https://www.egu.eu/meetings/calendar/store",
-  "retrieved": null,
-  "colors": {},
-  "note": "The supplied source currently returns HTTP 404. The browser uses a neutral accessible fallback until official current values are retrieved."
+  "source": "project-accessible-fallback-v1",
+  "official": false,
+  "official_source_checked": "https://www.egu.eu/meetings/calendar/store",
+  "retrieved": "2026-08-24",
+  "colors": {
+    "AS": "#0072B2",
+    "BG": "#009E73",
+    "CL": "#D55E00",
+    "CR": "#56B4E9",
+    "EMRP": "#CC79A7",
+    "EOS": "#E69F00",
+    "ERE": "#7E57C2",
+    "ESSI": "#5E35B1",
+    "G": "#4C78A8",
+    "GD": "#6B8E23",
+    "GI": "#17A2B8",
+    "GM": "#707070",
+    "GMPV": "#C44E52",
+    "HS": "#00897B",
+    "ITS": "#607D8B",
+    "NH": "#E76F51",
+    "NP": "#9C755F",
+    "OS": "#3F51B5",
+    "PS": "#E6A700",
+    "SM": "#8E5EA2",
+    "SSP": "#59A14F",
+    "SSS": "#7CB342",
+    "ST": "#D4A017",
+    "TS": "#D1495B"
+  },
+  "note": "The former official-source URL currently returns HTTP 404. This stable project palette provides accessible, consistent division recognition and never affects ranking."
 }

@@ -61,6 +61,32 @@ def division_codes(groups: Iterable[str]) -> list[str]:
     return sorted(codes)
 
 
+def primary_division_code(session_code: Any, known_codes: Iterable[str]) -> str | None:
+    """Return the host programme encoded at the start of an EGU session code."""
+    value = clean_text(session_code).upper()
+    for code in sorted({clean_text(item).upper() for item in known_codes}, key=len, reverse=True):
+        if code and re.match(rf"^{re.escape(code)}(?=\d|\.|$)", value):
+            return code
+    return None
+
+
+def visual_division_codes(
+    session_code: Any,
+    known_codes: Iterable[str],
+    co_organizer_codes: Iterable[str] = (),
+) -> list[str]:
+    """Order divisions for presentation: host, named co-organisers, then others."""
+    known = sorted({clean_text(item).upper() for item in known_codes if clean_text(item)})
+    primary = primary_division_code(session_code, known)
+    co_organizers = [
+        clean_text(item).upper()
+        for item in co_organizer_codes
+        if clean_text(item).upper() in known
+    ]
+    ordered = ([primary] if primary else []) + co_organizers + known
+    return list(dict.fromkeys(item for item in ordered if item))
+
+
 def abstract_text(title: str, abstract: str) -> str:
     title = clean_text(title)
     abstract = clean_text(abstract)

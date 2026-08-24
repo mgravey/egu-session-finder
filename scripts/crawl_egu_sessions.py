@@ -338,6 +338,23 @@ def description_from_soup(soup: BeautifulSoup) -> tuple[str | None, str | None]:
     return None, None
 
 
+def co_organizers_from_soup(soup: BeautifulSoup) -> tuple[str | None, list[str]]:
+    element = soup.select_one(".co_mto_programme-session-block-cosponsoring-coorganizing")
+    if element is None:
+        return None, []
+    text = " ".join(element.get_text(" ", strip=True).split())
+    match = re.search(
+        r"\bCo-organized by\s+(.+?)(?:,\s*co-sponsored by\b|$)",
+        text,
+        flags=re.I,
+    )
+    if match is None:
+        return None, []
+    label = match.group(1).strip(" .,;")
+    codes = re.findall(r"(?<![A-Z])([A-Z]{1,8})(?=\d|\s*(?:/|,|$))", label)
+    return label or None, list(dict.fromkeys(code.upper() for code in codes))
+
+
 def parse_session_page(
     content: bytes,
     *,
@@ -347,6 +364,7 @@ def parse_session_page(
 ) -> dict[str, Any]:
     soup = soup_from_bytes(content)
     description, description_heading = description_from_soup(soup)
+    co_organizer_label, co_organizer_codes = co_organizers_from_soup(soup)
     code = None
     if description_heading:
         code = re.sub(r"\s*\|\s*Session description\s*$", "", description_heading, flags=re.I)
@@ -400,6 +418,8 @@ def parse_session_page(
         "abstract_codes": abstract_codes,
         "abstract_count": len(abstract_codes),
         "discovery_groups": session.get("discovery_groups") or [],
+        "co_organizer_label": co_organizer_label,
+        "co_organizer_codes": co_organizer_codes,
         "source_url": session["url"],
         "raw_sha256": hashlib.sha256(content).hexdigest(),
     }

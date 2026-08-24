@@ -475,9 +475,14 @@ results displayed beyond that shortlist. Expansion reuses the query embedding
 held only in the current Web Worker memory; it does not re-embed the abstract,
 persist it, or transmit it in a request.
 
-Each result card uses the session division color as a restrained translucent
-background and edge accent. Division colors are presentation metadata only and
-never enter embedding, scoring, calibration, or ranking.
+Each result card uses stable division colors as restrained translucent
+presentation metadata; they never enter embedding, scoring, calibration, or
+ranking. The session-code prefix identifies the host division. For sessions
+co-organised by two or three divisions, the card background blends their colors
+and a segmented top rule preserves the exact membership. For sessions spanning
+four or more divisions, the host tint remains dominant while the top rule can
+scale to every participating division. Compact division codes and the official
+`Co-organized by` label remain visible, so color is never the only signal.
 
 The public interface is split into two static pages: `index.html` contains the
 matcher and results, while `method.html` documents data collection, historical
@@ -510,10 +515,11 @@ The production directory is `web/dist`. For EGU27, update the prepared session
 catalogue and multi-vector embeddings, recalibrate if appropriate, then change
 only `--year 2027`.
 
-The supplied division-color URL currently returns HTTP 404.
-`config/division_colors.json` records this and uses a neutral accessible UI
-fallback until official current values are recovered. Colors never influence
-ranking.
+The supplied historical division-color URL currently returns HTTP 404.
+`config/division_colors.json` records this and defines a stable project-owned,
+accessible presentation palette. It is explicitly marked as non-official and
+can be replaced if an authoritative current mapping becomes available. Colors
+never influence ranking.
 
 ## Matcher verification and known dependency finding
 
