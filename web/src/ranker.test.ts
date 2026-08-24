@@ -68,6 +68,7 @@ describe("SessionRanker", () => {
     expect(response.results.map((item) => item.sessionId)).toEqual(["1", "2"]);
     expect(response.results[0].confidence).toBe("high");
     expect(response.selection.mode).toBe("fixed");
+    expect(response.selection.candidateCount).toBe(2);
   });
 
   it("uses lexical terms when hybrid scoring is enabled", () => {
@@ -104,6 +105,7 @@ describe("SessionRanker", () => {
     );
     expect(response.selection.mode).toBe("dynamic");
     expect(response.selection.predictionSetSize).toBe(2);
+    expect(response.selection.candidateCount).toBe(2);
     expect(response.selection.shownCount).toBe(1);
     expect(response.selection.truncated).toBe(true);
     expect(response.results).toHaveLength(1);

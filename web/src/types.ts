@@ -30,6 +30,7 @@ export interface MatchResponse {
   selection: {
     mode: "dynamic" | "fixed";
     shownCount: number;
+    candidateCount: number;
     predictionSetSize?: number;
     targetCoverage?: number;
     calibrationYear?: number;

@@ -33,14 +33,23 @@ function confidenceText(value: "high" | "medium" | "low"): string {
 }
 
 function updateMoreControl(response: MatchResponse): void {
-  const total = response.selection.predictionSetSize;
+  const total = response.selection.candidateCount;
+  const calibratedTotal = response.selection.predictionSetSize;
   const shown = response.selection.shownCount;
-  const remaining = total === undefined ? 0 : Math.max(0, total - shown);
+  const remaining = Math.max(0, total - shown);
   moreResultsWrap.hidden = remaining === 0;
   if (remaining === 0) return;
   const increment = Math.min(10, remaining);
-  moreResultsLabel.textContent = `Show ${increment} more`;
-  moreResultsNote.textContent = `${shown} of ${total} calibrated candidates shown`;
+  moreResultsLabel.textContent = `Show next ${increment}`;
+  if (calibratedTotal !== undefined && shown < calibratedTotal) {
+    moreResultsNote.textContent = `${shown} of ${calibratedTotal} calibrated candidates shown`;
+  } else if (calibratedTotal !== undefined && shown === calibratedTotal) {
+    moreResultsNote.textContent = `Complete calibrated shortlist shown · lower-ranked sessions remain`;
+  } else if (calibratedTotal !== undefined) {
+    moreResultsNote.textContent = `${shown} of ${total} sessions shown · now beyond the calibrated shortlist`;
+  } else {
+    moreResultsNote.textContent = `${shown} of ${total} sessions shown`;
+  }
   moreResults.disabled = false;
 }
 
@@ -165,8 +174,7 @@ form.addEventListener("submit", (event) => {
 
 moreResults.addEventListener("click", () => {
   if (!ready || !lastResponse || !lastInput) return;
-  const total = lastResponse.selection.predictionSetSize;
-  if (total === undefined) return;
+  const total = lastResponse.selection.candidateCount;
   const topK = Math.min(lastResponse.selection.shownCount + 10, total);
   if (topK <= lastResponse.selection.shownCount) return;
   requestId += 1;

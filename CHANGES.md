@@ -1,8 +1,9 @@
 # Changes
 
-- Refined the static matcher layout and added incremental **Show 10 more**
-  expansion for large calibrated candidate sets, reusing only an in-memory
-  browser-worker embedding.
+- Made incremental result expansion available through the complete ranked
+  catalogue, with a clear boundary between calibrated and lower-ranked results.
+- Refined the static matcher layout and added incremental result expansion that
+  reuses only an in-memory browser-worker embedding.
 - Added frozen MiniLM multi-vector field/chunk embeddings and a five-feature
   positive-weight listwise ranker with temporal validation and sealed testing.
 - Added composition with an existing learned query/session metric so the

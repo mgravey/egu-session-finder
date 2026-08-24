@@ -183,6 +183,7 @@ export class SessionRanker {
       selection: {
         mode: topK === undefined && calibration ? "dynamic" : "fixed",
         shownCount,
+        candidateCount: order.length,
         predictionSetSize,
         targetCoverage: calibration?.targetCoverage,
         calibrationYear: calibration?.calibrationYear,
