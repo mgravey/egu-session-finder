@@ -1,5 +1,7 @@
 # Changes
 
+- Replaced the small division dot with an accessible translucent division-color
+  treatment across each result card for faster visual programme recognition.
 - Made incremental result expansion available through the complete ranked
   catalogue, with a clear boundary between calibrated and lower-ranked results.
 - Refined the static matcher layout and added incremental result expansion that

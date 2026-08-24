@@ -475,6 +475,10 @@ results displayed beyond that shortlist. Expansion reuses the query embedding
 held only in the current Web Worker memory; it does not re-embed the abstract,
 persist it, or transmit it in a request.
 
+Each result card uses the session division color as a restrained translucent
+background and edge accent. Division colors are presentation metadata only and
+never enter embedding, scoring, calibration, or ranking.
+
 ### Build the fully static website
 
 The selected multi-vector scorer is exported as packed float16 session vectors;
