@@ -475,6 +475,11 @@ results displayed beyond that shortlist. Expansion reuses the query embedding
 held only in the current Web Worker memory; it does not re-embed the abstract,
 persist it, or transmit it in a request.
 
+During local Vite development, the service worker always uses the network so it
+cannot cache Vite source modules, obsolete hot-reload tokens, or an older Web
+Worker interface. The result renderer also accepts the preceding catalogue
+shape during the first reload of an already-open development tab.
+
 Each result card uses stable division colors as restrained translucent
 presentation metadata; they never enter embedding, scoring, calibration, or
 ranking. The session-code prefix identifies the host division. For sessions

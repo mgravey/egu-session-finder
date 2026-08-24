@@ -105,7 +105,13 @@ function render(response: MatchResponse, shouldScroll = true): void {
   response.results.forEach((match) => {
     const item = document.createElement("li");
     item.className = "result-card";
-    cardDivisionStyle(item, match.divisionColors.length ? match.divisionColors : [match.color ?? "#52656f"]);
+    const divisionColors = match.divisionColors?.length
+      ? match.divisionColors
+      : [match.color ?? "#52656f"];
+    const visualDivisionCodes = match.visualDivisionCodes?.length
+      ? match.visualDivisionCodes
+      : match.divisions.map((value) => /\(([A-Z][A-Z0-9-]*)\)\s*$/.exec(value)?.[1] ?? value);
+    cardDivisionStyle(item, divisionColors);
 
     const rank = document.createElement("span");
     rank.className = "rank-number";
@@ -123,7 +129,7 @@ function render(response: MatchResponse, shouldScroll = true): void {
     meta.className = "result-meta";
     const division = document.createElement("span");
     division.className = "division-pill";
-    division.textContent = match.visualDivisionCodes.join(" · ") || "Cross-programme session";
+    division.textContent = visualDivisionCodes.join(" · ") || "Cross-programme session";
     division.title = match.divisions.join(" · ");
     meta.append(division);
     if (match.coOrganizerLabel) {

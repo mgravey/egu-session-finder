@@ -20,8 +20,8 @@ export interface RankedSession {
   divisions: string[];
   primaryDivisionCode?: string;
   coOrganizerLabel?: string;
-  visualDivisionCodes: string[];
-  divisionColors: string[];
+  visualDivisionCodes?: string[];
+  divisionColors?: string[];
   color?: string;
   url: string;
   similarity: number;

@@ -1,5 +1,9 @@
 # Changes
 
+- Made result rendering backward-compatible with an already-running pre-update
+  Web Worker during Vite hot reloads.
+- Prevented the offline service worker from caching localhost development
+  modules and added the missing static favicon.
 - Preserved EGU `Co-organized by` metadata and host-division identity through
   parsing, preparation, static catalogue export, and the browser API.
 - Added scalable interdisciplinary result treatments: blended backgrounds for
