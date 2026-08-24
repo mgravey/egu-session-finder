@@ -1,5 +1,7 @@
 # Changes
 
+- Compacted the matcher landing layout and initial abstract field so the submit
+  button is visible without scrolling on a standard laptop viewport.
 - Rebuilt the landing page around the abstract form so the primary task appears
   immediately, moved privacy details to a dedicated static page, and typeset
   the scoring formulas with semantic MathML.

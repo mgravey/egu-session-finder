@@ -28,6 +28,7 @@ web/.vite-inspect/
 web/.eslintcache
 web/.stylelintcache
 web/.htmlvalidatecache
+web/.lighthouseci/
 *.tsbuildinfo
 web/public/models/*
 !web/public/models/.gitkeep

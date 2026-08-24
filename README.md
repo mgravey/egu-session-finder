@@ -490,7 +490,8 @@ maximum. Compact division codes and the official
 `Co-organized by` label remain visible, so color is never the only signal.
 
 The public interface is split into three static pages. `index.html` opens
-directly on the abstract matcher and results, `method.html` documents data
+directly on a compact abstract matcher whose submit action remains visible in
+the first standard laptop viewport, followed by results. `method.html` documents data
 collection, historical joins, leakage prevention, temporal evaluation,
 multi-vector scoring, prediction-set calibration, and browser inference, and
 `privacy.html` explains the browser-only data boundary. The method page uses
