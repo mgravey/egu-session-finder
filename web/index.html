@@ -1,28 +1,45 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="icon" href="./favicon-64.png" type="image/png" sizes="64x64">
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EGU27 Session Finder – Match your abstract to EGU General Assembly 2027 sessions</title>
+    <meta name="description" content="Paste your abstract and get a shortlist of the best-matching EGU27 sessions before the 12 January 2027 deadline. Free, private: your text never leaves your browser." />
+    <link rel="canonical" href="https://mgravey.com/egu-session-finder/" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Mathieu Gravey" />
     <meta name="theme-color" content="#f3f1e9" />
-    <meta name="description" content="Find suitable EGU General Assembly sessions with a private, browser-based scientific matching model." />
-    <meta property="og:title" content="EGU Session Finder" />
-    <meta property="og:description" content="A private, on-device shortlist of relevant EGU General Assembly sessions." />
+    <link rel="icon" href="./favicon-64.png" type="image/png" sizes="64x64">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="EGU Session Finder" />
-    <meta name="twitter:description" content="Match an abstract to the EGU programme without sending the text to a server." />
-    <title>EGU Session Finder · Private on-device matching</title>
+    <meta property="og:site_name" content="EGU27 Session Finder" />
+    <meta property="og:url" content="https://mgravey.com/egu-session-finder/" />
+    <meta property="og:title" content="EGU27 Session Finder – which EGU 2027 session fits your abstract?" />
+    <meta property="og:description" content="Private, in-browser matching of your abstract against all 1,259 EGU27 scientific sessions. Validated on EGU24–EGU26." />
+    <meta property="og:image" content="https://mgravey.com/egu-session-finder/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="EGU27 Session Finder: find the right session for your abstract" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="EGU27 Session Finder – which EGU 2027 session fits your abstract?" />
+    <meta name="twitter:description" content="Private, in-browser matching of your abstract against all 1,259 EGU27 scientific sessions. Validated on EGU24–EGU26." />
+    <meta name="twitter:image" content="https://mgravey.com/egu-session-finder/og-image.png" />
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "EGU27 Session Finder", "url": "https://mgravey.com/egu-session-finder/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any modern web browser", "browserRequirements": "Requires JavaScript and WebAssembly", "description": "Matches a scientific abstract to the most relevant sessions of the EGU General Assembly 2027, privately in the browser.", "inLanguage": "en", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "author": {"@type": "Person", "name": "Mathieu Gravey", "url": "https://mgravey.com/"}, "about": {"@type": "Event", "name": "EGU General Assembly 2027", "startDate": "2027-04-04", "endDate": "2027-04-09", "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode", "location": {"@type": "Place", "name": "Austria Center Vienna", "address": "Vienna, Austria"}, "url": "https://www.egu27.eu/"}}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is this the official EGU abstract submission tool?", "acceptedAnswer": {"@type": "Answer", "text": "No. EGU27 Session Finder is an independent research tool by Mathieu Gravey. It only helps you shortlist sessions; you still submit your abstract through the official EGU27 call for abstracts on meetingorganizer.copernicus.org."}}, {"@type": "Question", "name": "Is my abstract uploaded or stored?", "acceptedAnswer": {"@type": "Answer", "text": "No. The language model runs inside your browser. Your title and abstract are never sent to a server, logged, or saved; the site only downloads static files (the model and the session catalogue)."}}, {"@type": "Question", "name": "How accurate are the suggestions?", "acceptedAnswer": {"@type": "Answer", "text": "Each past conference was replayed as if it were the next one: the model learned only from earlier years. On EGU26 the session an abstract was actually presented in was the first suggestion for 32% of abstracts, in the top 2 for 46%, in the top 5 for 65%, and in the top 10 for 78%. Many abstracts genuinely fit several sessions, so read the descriptions before choosing."}}, {"@type": "Question", "name": "Which EGU27 sessions are included?", "acceptedAnswer": {"@type": "Answer", "text": "All 1,259 scientific sessions of the EGU27 programme as published for the call for abstracts, including inter- and transdisciplinary (ITS) sessions. Short courses, Geo Panels, medal lectures, town halls, and similar events are excluded. Sessions can still be merged or withdrawn by the organisers, so always check the official programme."}}, {"@type": "Question", "name": "When is the EGU27 abstract deadline?", "acceptedAnswer": {"@type": "Answer", "text": "The EGU27 abstract submission deadline is Tuesday 12 January 2027, 13:00 CET. The General Assembly takes place in Vienna and online from 4 to 9 April 2027."}}, {"@type": "Question", "name": "Why do I get a different number of suggestions each time?", "acceptedAnswer": {"@type": "Answer", "text": "The shortlist length adapts to how clear-cut the match is. It is calibrated on EGU26, the most recent conference, so that it contains the session past authors actually chose about 80% of the time, typically with around 9 sessions."}}, {"@type": "Question", "name": "Does it work on a phone or offline?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The first visit downloads about 35 MB (the compressed language model and catalogue); after that the files are cached and matching works even without a connection."}}]}</script>
   </head>
   <body class="home-page">
     <div class="page-grid" aria-hidden="true"></div>
+    <a class="skip-link" href="#matcher">Skip to the session finder</a>
+    <div class="deadline-strip" role="note">
+      <span><strong>EGU27 abstract deadline:</strong> 12 January 2027, 13:00 CET<span id="deadline-countdown"></span></span>
+      <a href="https://www.egu27.eu/" target="_blank" rel="noopener noreferrer">EGU27 call for abstracts ↗</a>
+    </div>
     <header class="site-header">
-      <a class="brand" href="#top" aria-label="EGU Session Finder home">
-        <img class="brand-mark" src="./logo-mark.png" alt=""><span>EGU Session Finder</span>
+      <a class="brand" href="./" aria-label="EGU27 Session Finder home">
+        <img class="brand-mark" src="./logo-mark.png" alt="" width="38" height="38"><span>EGU27 Session Finder</span>
       </a>
       <nav aria-label="Main navigation">
-        <a href="#matcher" aria-current="page">Matcher</a><a href="./method.html">Method</a><a href="./privacy.html">Privacy</a>
+        <a href="#matcher" aria-current="page">Finder</a><a href="#track-record">Track record</a><a href="#faq">FAQ</a><a href="./method.html">Method</a><a href="./privacy.html">Privacy</a>
       </nav>
       <span class="catalogue-chip"><span class="live-dot"></span>EGU<span data-catalogue-year>27</span> catalogue</span>
     </header>
@@ -30,10 +47,10 @@
     <main id="top">
       <section id="matcher" class="matcher-landing" aria-labelledby="matcher-title">
         <div class="landing-intro">
-          <p class="eyebrow"><span>EGU27 session finder</span></p>
-          <h1 id="matcher-title">Find the right session<br /><em>for your abstract.</em></h1>
-          <p class="intro">Paste your title and abstract to compare them directly with <span data-session-count>786</span> scientific sessions. The text stays on this device.</p>
-          <p class="landing-meta"><span>Private browser inference</span><span>3–20 calibrated suggestions</span><span>Official session links</span></p>
+          <p class="eyebrow"><span>EGU General Assembly 2027 · Vienna &amp; online · 4–9 April</span></p>
+          <h1 id="matcher-title">Find the right session<br /><em>for your EGU27 abstract.</em></h1>
+          <p class="intro">Paste your title and abstract to rank all <span data-session-count>1,259</span> EGU27 scientific sessions by fit. Matching runs entirely in your browser — your text never leaves this device.</p>
+          <p class="landing-meta"><span>Private, on-device</span><span>Tested on EGU24–EGU26</span><span>Free, no account</span></p>
         </div>
         <form id="matcher-form" class="composer landing-composer">
           <div class="field-heading"><label for="title">Abstract title <span>optional, but helpful</span></label></div>
@@ -42,7 +59,7 @@
           <textarea id="abstract" name="abstract" rows="6" maxlength="30000" required placeholder="Paste the scientific abstract here…"></textarea>
           <div class="privacy-inline"><span class="privacy-symbol" aria-hidden="true">◎</span><p><strong>Processed locally.</strong> Your text is not uploaded, logged, or saved. <a href="./privacy.html">How privacy works →</a></p></div>
           <div class="form-footer">
-            <p id="status" role="status">Preparing the EGU catalogue and local language model…</p>
+            <p id="status" role="status">Preparing the EGU27 catalogue and local language model…</p>
             <button id="submit" type="submit" disabled><span>Match sessions</span><span aria-hidden="true">↗</span></button>
           </div>
         </form>
@@ -64,13 +81,81 @@
         <p class="decision-note">Treat this as navigation support, not an automatic submission decision. Read each description and confirm the current call on the official programme page.</p>
       </section>
 
+      <section id="track-record" class="track-record" aria-labelledby="track-title">
+        <div class="track-copy">
+          <p class="eyebrow"><span>Tested on past conferences</span></p>
+          <h2 id="track-title">How often the right session is near the top</h2>
+          <p>Each past General Assembly was replayed as if it were next year’s: the model learned only from earlier years, then ranked that year’s sessions for every abstract. A hit means the session the abstract was actually presented in appears within the first suggestions.</p>
+        </div>
+        <div class="kpi-row" aria-label="EGU26 backtest results">
+          <div class="kpi"><strong>32%</strong><span>first suggestion</span></div>
+          <div class="kpi"><strong>46%</strong><span>within the top 2</span></div>
+          <div class="kpi"><strong>65%</strong><span>within the top 5</span></div>
+          <div class="kpi"><strong>78%</strong><span>within the top 10</span></div>
+        </div>
+        <p class="kpi-caption">EGU26 · 20,858 abstracts · 786 scientific sessions · model trained on 2022–2024 only</p>
+
+        <figure class="chart-card">
+          <div class="chart-toolbar">
+            <figcaption>
+              <strong>Share of abstracts whose session is within the top <em>k</em> suggestions</strong>
+              <span>Session Finder compared with plain text-embedding search, same candidates</span>
+            </figcaption>
+            <div class="segmented" role="group" aria-label="Conference year" id="year-picker"></div>
+          </div>
+          <div class="chart-legend" aria-hidden="true">
+            <span><i class="key key-model"></i>EGU27 Session Finder</span>
+            <span><i class="key key-baseline"></i>Plain embedding search</span>
+          </div>
+          <div id="rank-chart" class="rank-chart"></div>
+          <div id="chart-tooltip" class="chart-tooltip" hidden></div>
+        </figure>
+
+        <div class="table-wrap">
+          <table class="track-table">
+            <caption>Backtest results by conference (scientific sessions only)</caption>
+            <thead>
+              <tr><th scope="col">Conference</th><th scope="col">Trained on</th><th scope="col">Top 1</th><th scope="col">Top 2</th><th scope="col">Top 5</th><th scope="col">Top 10</th><th scope="col">Top 20</th><th scope="col">Shortlist hit rate</th></tr>
+            </thead>
+            <tbody id="track-table-body"></tbody>
+          </table>
+        </div>
+        <p class="method-caveat">Historical assignments are imperfect labels: an abstract often fits several sessions equally well, so a “miss” is not necessarily a wrong suggestion. EGU27 has more candidate sessions than EGU26 (1,259 vs. 786) before organisers merge sessions, which makes the task slightly harder. <a href="./method.html">Full method and evaluation →</a></p>
+      </section>
+
+      <section class="how-it-works" aria-labelledby="how-title">
+        <p class="eyebrow"><span>How it works</span></p>
+        <h2 id="how-title">Three steps, all on your device</h2>
+        <ol class="steps-grid">
+          <li><span>01</span><h3>Read your abstract</h3><p>A compact language model turns your title and each passage of the abstract into semantic vectors, inside the browser.</p></li>
+          <li><span>02</span><h3>Compare every session</h3><p>Your text is compared with the title and description of every EGU27 scientific session, using a scoring learned from 68,000 past abstract–session assignments.</p></li>
+          <li><span>03</span><h3>Get a calibrated shortlist</h3><p>Clear-cut abstracts get a short list, interdisciplinary ones a longer one. Each result links to the official session page.</p></li>
+        </ol>
+      </section>
+
+      <section id="faq" class="faq" aria-labelledby="faq-title">
+        <div>
+          <p class="eyebrow"><span>Questions</span></p>
+          <h2 id="faq-title">Frequently asked questions</h2>
+        </div>
+        <div class="faq-list">
+          <details open><summary>Is this the official EGU abstract submission tool?</summary><p>No. EGU27 Session Finder is an independent research tool by Mathieu Gravey. It only helps you shortlist sessions; you still submit your abstract through the official EGU27 call for abstracts on meetingorganizer.copernicus.org.</p></details>
+          <details><summary>Is my abstract uploaded or stored?</summary><p>No. The language model runs inside your browser. Your title and abstract are never sent to a server, logged, or saved; the site only downloads static files (the model and the session catalogue).</p></details>
+          <details><summary>How accurate are the suggestions?</summary><p>Each past conference was replayed as if it were the next one: the model learned only from earlier years. On EGU26 the session an abstract was actually presented in was the first suggestion for 32% of abstracts, in the top 2 for 46%, in the top 5 for 65%, and in the top 10 for 78%. Many abstracts genuinely fit several sessions, so read the descriptions before choosing.</p></details>
+          <details><summary>Which EGU27 sessions are included?</summary><p>All 1,259 scientific sessions of the EGU27 programme as published for the call for abstracts, including inter- and transdisciplinary (ITS) sessions. Short courses, Geo Panels, medal lectures, town halls, and similar events are excluded. Sessions can still be merged or withdrawn by the organisers, so always check the official programme.</p></details>
+          <details><summary>When is the EGU27 abstract deadline?</summary><p>The EGU27 abstract submission deadline is Tuesday 12 January 2027, 13:00 CET. The General Assembly takes place in Vienna and online from 4 to 9 April 2027.</p></details>
+          <details><summary>Why do I get a different number of suggestions each time?</summary><p>The shortlist length adapts to how clear-cut the match is. It is calibrated on EGU26, the most recent conference, so that it contains the session past authors actually chose about 80% of the time, typically with around 9 sessions.</p></details>
+          <details><summary>Does it work on a phone or offline?</summary><p>Yes. The first visit downloads about 35 MB (the compressed language model and catalogue); after that the files are cached and matching works even without a connection.</p></details>
+        </div>
+      </section>
     </main>
 
     <footer>
-      <div><strong>EGU Session Finder</strong><p>An independent research prototype. Not an official EGU submission service.</p></div>
+      <div><strong>EGU27 Session Finder</strong><p>An independent tool by <a href="https://mgravey.com/">Mathieu Gravey</a>. Not affiliated with or endorsed by the European Geosciences Union.</p></div>
       <div class="footer-links">
-        <a href="./method.html">Method &amp; construction →</a>
+        <a href="./method.html">Method →</a>
         <a href="./privacy.html">Privacy →</a>
+        <a href="https://github.com/mgravey/egu-session-finder" target="_blank" rel="noopener noreferrer">Source code ↗</a>
         <a href="https://www.egu27.eu/" target="_blank" rel="noopener noreferrer">EGU27 website ↗</a>
         <a href="https://meetingorganizer.copernicus.org/EGU27/sessionprogramme/pg-selection" target="_blank" rel="noopener noreferrer">Official programme ↗</a>
       </div>

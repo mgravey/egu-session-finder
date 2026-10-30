@@ -1,3 +1,4 @@
+import "./fonts";
 import "./style.css";
 import { enableOfflineCache } from "./offline";
 

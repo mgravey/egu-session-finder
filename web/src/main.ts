@@ -1,8 +1,12 @@
+import "./fonts";
 import "./style.css";
 import { enableOfflineCache } from "./offline";
+import { initDeadlineCountdown, initTrackRecord } from "./track-record";
 import type { MatchResponse } from "./types";
 
 void enableOfflineCache();
+initTrackRecord();
+initDeadlineCountdown();
 
 const form = document.querySelector<HTMLFormElement>("#matcher-form")!;
 const title = document.querySelector<HTMLInputElement>("#title")!;

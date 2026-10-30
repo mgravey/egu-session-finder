@@ -2,7 +2,7 @@ let registration: Promise<ServiceWorkerRegistration | undefined> | undefined;
 
 export function enableOfflineCache(): Promise<ServiceWorkerRegistration | undefined> {
   if (!("serviceWorker" in navigator)) return Promise.resolve(undefined);
-  const appBase = new URL(import.meta.env.BASE_URL, window.location.origin);
+  const appBase = new URL(import.meta.env.BASE_URL, window.location.href);
   registration ??= navigator.serviceWorker
     .register(new URL("sw.js", appBase), { scope: appBase.pathname })
     .then(() => navigator.serviceWorker.ready)

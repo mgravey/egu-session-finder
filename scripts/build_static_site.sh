@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SITE_YEAR=2026
+SITE_YEAR=2027
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DATA_DIR="$PROJECT_DIR/data/matcher"
+DATA_DIR="$PROJECT_DIR/data/matcher/egu27"
 WEB_DIR="$PROJECT_DIR/web"
 PYTHON_BIN="$PROJECT_DIR/.venv-ml/bin/python"
 
@@ -21,10 +21,10 @@ done
 "$PYTHON_BIN" "$PROJECT_DIR/scripts/export_multivector_browser_catalogue.py" \
     --prepared-dir "$DATA_DIR/prepared" \
     --baseline-embedding-dir "$DATA_DIR/embeddings/minilm-l6" \
-    --multivector-dir "$DATA_DIR/experiments/multi-vector/embeddings" \
+    --multivector-dir "$DATA_DIR/multivector" \
     --metric-head "$DATA_DIR/metric-learning/metric-head.npz" \
-    --weights "$DATA_DIR/experiments/multi-vector/ranker-with-metric/browser-weights.json" \
-    --prediction-set "$DATA_DIR/experiments/multi-vector/prediction-set.json" \
+    --weights "$DATA_DIR/ranker/browser-weights.json" \
+    --prediction-set "$DATA_DIR/prediction-set.json" \
     --model-config "$PROJECT_DIR/config/models.json" \
     --division-colors "$PROJECT_DIR/config/division_colors.json" \
     --model minilm-l6 \

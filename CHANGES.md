@@ -1,5 +1,18 @@
 # Changes
 
+- Prepared public deployment on GitHub Pages at mgravey.com/egu-session-finder:
+  SEO metadata, JSON-LD (web application, event, FAQ), sitemap, robots, social
+  preview image, 404 page, and a Pages workflow running tests before deploying.
+- Added a track-record section with rolling backtests (EGU24–EGU26, each
+  trained only on earlier years) showing top-1/2/5/10/20 hit rates against a
+  plain embedding baseline, plus a deadline countdown and FAQ.
+- Fixed the WebAssembly fallback: WebGPU is attempted only when a GPU adapter
+  exists, since a failed WebGPU initialisation prevented any fallback.
+- Self-hosted DM Mono and Source Serif 4 fonts; service-worker registration now
+  resolves relative to the page, so the site works under a subpath.
+- Removed dead-end full-encoder fine-tuning, fine-tuned ONNX export, embedding
+  model selection, and OpenAI Sites packaging.
+
 - Crawled the EGU27 call-for-abstracts programme (1,336 sessions) and added
   parsing for its inline `sessionDescription` layout; session codes no longer
   fall back to presentation-format badges such as `PICO`. Re-parsing

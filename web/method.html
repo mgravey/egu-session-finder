@@ -1,28 +1,40 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="icon" href="./favicon-64.png" type="image/png" sizes="64x64">
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How it works – EGU27 Session Finder method and evaluation</title>
+    <meta name="description" content="How EGU27 Session Finder was built from EGU2020–2026 programmes and 120,000 abstracts, and how often it found the right session in past years." />
+    <link rel="canonical" href="https://mgravey.com/egu-session-finder/method.html" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Mathieu Gravey" />
     <meta name="theme-color" content="#f3f1e9" />
-    <meta name="description" content="How the private EGU Session Finder was constructed, evaluated, calibrated, and exported for browser inference." />
-    <meta property="og:title" content="Method · EGU Session Finder" />
-    <meta property="og:description" content="From historical EGU programmes to a private, calibrated browser matcher." />
+    <link rel="icon" href="./favicon-64.png" type="image/png" sizes="64x64">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
-    <title>Method · EGU Session Finder</title>
+    <meta property="og:site_name" content="EGU27 Session Finder" />
+    <meta property="og:url" content="https://mgravey.com/egu-session-finder/method.html" />
+    <meta property="og:title" content="How the EGU27 Session Finder works" />
+    <meta property="og:description" content="Training on past EGU assignments, year-by-year backtests, and calibrated shortlists." />
+    <meta property="og:image" content="https://mgravey.com/egu-session-finder/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="EGU27 Session Finder: find the right session for your abstract" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="How the EGU27 Session Finder works" />
+    <meta name="twitter:description" content="Training on past EGU assignments, year-by-year backtests, and calibrated shortlists." />
+    <meta name="twitter:image" content="https://mgravey.com/egu-session-finder/og-image.png" />
   </head>
   <body class="method-page">
     <div class="page-grid" aria-hidden="true"></div>
     <header class="site-header">
-      <a class="brand" href="./index.html" aria-label="EGU Session Finder home">
-        <img class="brand-mark" src="./logo-mark.png" alt=""><span>EGU Session Finder</span>
+      <a class="brand" href="./" aria-label="EGU27 Session Finder home">
+        <img class="brand-mark" src="./logo-mark.png" alt="" width="38" height="38"><span>EGU27 Session Finder</span>
       </a>
       <nav aria-label="Main navigation">
-        <a href="./index.html#matcher">Matcher</a><a href="./method.html" aria-current="page">Method</a><a href="./privacy.html">Privacy</a>
+        <a href="./#matcher">Finder</a><a href="./#track-record">Track record</a><a href="./#faq">FAQ</a><a href="./method.html" aria-current="page">Method</a><a href="./privacy.html">Privacy</a>
       </nav>
-      <a class="catalogue-chip catalogue-link" href="./index.html#matcher"><span class="live-dot"></span>Open matcher</a>
+      <a class="catalogue-chip catalogue-link" href="./#matcher"><span class="live-dot"></span>Open finder</a>
     </header>
 
     <main id="top">
@@ -149,14 +161,14 @@
 
       <section class="method-cta">
         <div><p class="eyebrow">Try the current catalogue</p><h2>Bring your abstract.</h2></div>
-        <a class="primary-link" href="./index.html#matcher">Open the matcher <span>↗</span></a>
+        <a class="primary-link" href="./#matcher">Open the session finder <span>↗</span></a>
       </section>
     </main>
 
     <footer>
-      <div><strong>EGU Session Finder</strong><p>An independent research prototype. Not an official EGU submission service.</p></div>
+      <div><strong>EGU27 Session Finder</strong><p>An independent tool by <a href="https://mgravey.com/">Mathieu Gravey</a>. Not affiliated with or endorsed by the European Geosciences Union.</p></div>
       <div class="footer-links">
-        <a href="./index.html#matcher">Matcher →</a>
+        <a href="./#matcher">Session finder →</a>
         <a href="./privacy.html">Privacy →</a>
         <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2" target="_blank" rel="noopener noreferrer">Model provenance ↗</a>
         <a href="https://meetingorganizer.copernicus.org/EGU27/sessionprogramme/pg-selection" target="_blank" rel="noopener noreferrer">Official programme ↗</a>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "egu-session-matcher-v5-brand";
+const CACHE_NAME = "egu-session-matcher-v6-egu27";
 const IS_LOCAL_DEVELOPMENT = self.location.port === "5173" ||
   ["localhost", "127.0.0.1", "::1"].includes(self.location.hostname);
 

@@ -60,6 +60,16 @@ async function fetchCatalogue(): Promise<Catalogue> {
   return { manifest, sessions, vectors };
 }
 
+async function hasWebGpuAdapter(): Promise<boolean> {
+  const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu;
+  if (!gpu) return false;
+  try {
+    return (await gpu.requestAdapter()) !== null;
+  } catch {
+    return false;
+  }
+}
+
 async function loadExtractor(): Promise<void> {
   const localName = manifest.browserModelPath?.replace(/^\/?models\//, "").replace(/\/$/, "");
   if (localName) {
@@ -78,7 +88,9 @@ async function loadExtractor(): Promise<void> {
     );
   }
   tokenizer = await AutoTokenizer.from_pretrained(model);
-  if ("gpu" in navigator) {
+  // Probe for a real adapter first: a failed WebGPU session initialisation
+  // leaves ONNX Runtime unable to fall back to WebAssembly in this worker.
+  if (await hasWebGpuAdapter()) {
     try {
       status("Loading the local model with WebGPU…");
       extractor = (await pipeline("feature-extraction", model, {
