@@ -16,13 +16,11 @@ trained only on earlier years and calibrated on the year before, exactly as the
 deployed EGU27 model was prepared (trained on 2022–2025, calibrated on 2026).
 Candidates are typical scientific sessions only.
 
-| Conference | Trained on | Top 1 | Top 2 | Top 5 | Top 10 | Top 20 | Shortlist hit rate |
-|---|---|---:|---:|---:|---:|---:|---:|
-| EGU26 | 2022–24 | 32.2% | 46.0% | 64.8% | 77.7% | 87.2% | 79.5% (median 9) |
-| EGU25 | 2022–23 | 31.6% | 45.5% | 63.2% | 75.2% | 84.3% | 81.4% (median 10) |
-| EGU24 | 2022 | 30.1% | 43.2% | 61.3% | 74.1% | 84.6% | 78.8% (median 11) |
-
-A plain MiniLM cosine search reaches 68.9–71.3% top-10 on the same years.
+| Conference | Trained on | Top 1 | Top 2 | Top 5 | Top 10 | Top 20 | Right session in shortlist | Typical shortlist length |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| EGU26 | 2022–24 | 32.2% | 46.0% | 64.8% | 77.7% | 87.2% | 79.5% | 9 sessions |
+| EGU25 | 2022–23 | 31.6% | 45.5% | 63.2% | 75.2% | 84.3% | 81.4% | 10 sessions |
+| EGU24 | 2022 | 30.1% | 43.2% | 61.3% | 74.1% | 84.6% | 78.8% | 11 sessions |
 
 ## Method in brief
 
@@ -129,3 +127,6 @@ with or endorsed by the European Geosciences Union. Session titles and
 descriptions belong to their conveners and EGU; always check the
 [official programme](https://meetingorganizer.copernicus.org/EGU27/sessionprogramme).
 Model provenance is recorded in [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
+
+The code, data pipeline, and website were developed with the help of AI coding
+tools.

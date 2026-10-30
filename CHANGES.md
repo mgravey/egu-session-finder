@@ -1,5 +1,14 @@
 # Changes
 
+- Matching now runs as soon as an abstract is pasted, or after a short pause in
+  typing; the button then scrolls to the current suggestions.
+- The track record shows only the deployed model; the plain-embedding
+  comparison is removed, and the shortlist column is split into hit rate and
+  typical length.
+- Footers and README note that the project was developed with AI coding tools.
+- Pages are now served network-first by the service worker so new deployments
+  reach returning visitors.
+
 - Prepared public deployment on GitHub Pages at mgravey.com/egu-session-finder:
   SEO metadata, JSON-LD (web application, event, FAQ), sitemap, robots, social
   preview image, 404 page, and a Pages workflow running tests before deploying.

@@ -21,7 +21,6 @@ def cumulative(curve: list[dict[str, Any]], max_rank: int) -> list[float]:
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
-    baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
     years = []
     for year in args.years:
         directory = args.rolling_dir / str(year)
@@ -38,7 +37,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "abstracts": summary["denominator_rows"],
                 "candidateSessions": summary["candidate_sessions"],
                 "model": cumulative(summary["curve"], args.max_rank),
-                "baseline": cumulative(baseline["years"][str(year)]["curve"], args.max_rank),
                 "shortlist": {
                     "coverage": round(evaluation["empiricalCoverage"], 6),
                     "medianSize": evaluation["medianSetSize"],
@@ -59,11 +57,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rolling-dir", type=Path, default=Path("data/matcher/egu27/rolling"))
-    parser.add_argument(
-        "--baseline",
-        type=Path,
-        default=Path("data/matcher/egu27/rolling/baseline-ranks-typical.json"),
-    )
     parser.add_argument("--years", type=int, nargs="+", default=[2024, 2025, 2026])
     parser.add_argument("--max-rank", type=int, default=20)
     parser.add_argument("--output", type=Path, default=Path("web/src/track-record.json"))

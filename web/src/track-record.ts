@@ -7,7 +7,6 @@ interface YearRecord {
   abstracts: number;
   candidateSessions: number;
   model: number[];
-  baseline: number[];
   shortlist: { coverage: number; medianSize: number };
 }
 
@@ -41,7 +40,8 @@ function renderTable(body: HTMLElement): void {
       label(item.year),
       trainedOn(item),
       ...[1, 2, 5, 10, 20].map((k) => percent(item.model[k - 1], 1)),
-      `${percent(item.shortlist.coverage, 1)} · median ${item.shortlist.medianSize}`,
+      percent(item.shortlist.coverage, 1),
+      `${item.shortlist.medianSize} sessions`,
     ];
     cells.forEach((value, index) => {
       const cell = document.createElement(index === 0 ? "th" : "td");
@@ -58,7 +58,7 @@ function renderChart(container: HTMLElement, tooltip: HTMLElement, item: YearRec
   const width = Math.max(300, Math.round(container.clientWidth || 720));
   const compact = width < 560;
   const height = compact ? 250 : 320;
-  const margin = { top: 16, right: compact ? 64 : 150, bottom: 40, left: 44 };
+  const margin = { top: 16, right: compact ? 48 : 64, bottom: 40, left: 44 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
   const ranks = item.model.length;
@@ -83,32 +83,17 @@ function renderChart(container: HTMLElement, tooltip: HTMLElement, item: YearRec
   const axisTitle = svg("text", { x: margin.left + plotWidth / 2, y: height - 2, "text-anchor": "middle", class: "axis-title" }, grid);
   axisTitle.textContent = "Number of suggestions read (k)";
 
-  const series = [
-    { key: "baseline", name: "Plain embedding search", values: item.baseline },
-    { key: "model", name: "EGU27 Session Finder", values: item.model },
-  ] as const;
-  for (const entry of series) {
-    const path = entry.values.map((value, index) => `${index ? "L" : "M"}${x(index + 1)},${y(value)}`).join("");
-    if (entry.key === "model") {
-      svg("path", { d: `${path}L${x(ranks)},${y(0)}L${x(1)},${y(0)}Z`, class: "series-area" }, root);
-    }
-    svg("path", { d: path, class: `series-line series-${entry.key}` }, root);
-    const last = entry.values[ranks - 1];
-    svg("circle", { cx: x(ranks), cy: y(last), r: 4.5, class: `series-dot series-${entry.key}` }, root);
-    const endLabel = svg("text", {
-      x: x(ranks) + 12,
-      y: y(last) + (entry.key === "model" ? -2 : 12),
-      class: "series-label",
-    }, root);
-    endLabel.textContent = compact
-      ? percent(last)
-      : `${percent(last)} ${entry.key === "model" ? "Session Finder" : "plain search"}`;
-  }
+  const values = item.model;
+  const path = values.map((value, index) => `${index ? "L" : "M"}${x(index + 1)},${y(value)}`).join("");
+  svg("path", { d: `${path}L${x(ranks)},${y(0)}L${x(1)},${y(0)}Z`, class: "series-area" }, root);
+  svg("path", { d: path, class: "series-line series-model" }, root);
+  const last = values[ranks - 1];
+  svg("circle", { cx: x(ranks), cy: y(last), r: 4.5, class: "series-dot series-model" }, root);
+  const endLabel = svg("text", { x: x(ranks) + 10, y: y(last) + 4, class: "series-label" }, root);
+  endLabel.textContent = percent(last);
 
   const crosshair = svg("line", { class: "crosshair", y1: margin.top, y2: margin.top + plotHeight, visibility: "hidden" }, root);
-  const markers = series.map((entry) =>
-    svg("circle", { r: 4.5, class: `series-dot series-${entry.key}`, visibility: "hidden" }, root),
-  );
+  const marker = svg("circle", { r: 4.5, class: "series-dot series-model", visibility: "hidden" }, root);
   const hit = svg("rect", {
     x: margin.left - 12,
     y: margin.top,
@@ -123,25 +108,18 @@ function renderChart(container: HTMLElement, tooltip: HTMLElement, item: YearRec
     crosshair.setAttribute("x1", String(position));
     crosshair.setAttribute("x2", String(position));
     crosshair.setAttribute("visibility", "visible");
-    series.forEach((entry, index) => {
-      markers[index].setAttribute("cx", String(position));
-      markers[index].setAttribute("cy", String(y(entry.values[rank - 1])));
-      markers[index].setAttribute("visibility", "visible");
-    });
+    marker.setAttribute("cx", String(position));
+    marker.setAttribute("cy", String(y(values[rank - 1])));
+    marker.setAttribute("visibility", "visible");
     const heading = document.createElement("p");
     heading.textContent = `${label(item.year)} · top ${rank}`;
-    const rows = [...series].reverse().map((entry) => {
-      const row = document.createElement("div");
-      const key = document.createElement("i");
-      key.className = `key key-${entry.key}`;
-      const value = document.createElement("strong");
-      value.textContent = percent(entry.values[rank - 1], 1);
-      const name = document.createElement("span");
-      name.textContent = entry.name;
-      row.append(key, value, name);
-      return row;
-    });
-    tooltip.replaceChildren(heading, ...rows);
+    const row = document.createElement("div");
+    const value = document.createElement("strong");
+    value.textContent = percent(values[rank - 1], 1);
+    const name = document.createElement("span");
+    name.textContent = rank === 1 ? "first suggestion is right" : `right session within the top ${rank}`;
+    row.append(value, name);
+    tooltip.replaceChildren(heading, row);
     tooltip.hidden = false;
     const bounds = container.getBoundingClientRect();
     const left = (position / width) * bounds.width;
@@ -150,7 +128,7 @@ function renderChart(container: HTMLElement, tooltip: HTMLElement, item: YearRec
   };
   const hide = () => {
     crosshair.setAttribute("visibility", "hidden");
-    markers.forEach((marker) => marker.setAttribute("visibility", "hidden"));
+    marker.setAttribute("visibility", "hidden");
     tooltip.hidden = true;
   };
   let focusedRank = 10;

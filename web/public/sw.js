@@ -1,4 +1,4 @@
-const CACHE_NAME = "egu-session-matcher-v6-egu27";
+const CACHE_NAME = "egu-session-matcher-v7-egu27";
 const IS_LOCAL_DEVELOPMENT = self.location.port === "5173" ||
   ["localhost", "127.0.0.1", "::1"].includes(self.location.hostname);
 
@@ -29,7 +29,9 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(fetch(request));
     return;
   }
-  if (url.pathname.includes("/catalogue/")) {
+  // Pages and the catalogue are fetched fresh when online so a new deployment
+  // is picked up; hashed assets and the model stay cache-first.
+  if (request.mode === "navigate" || url.pathname.includes("/catalogue/")) {
     event.respondWith(
       caches.open(CACHE_NAME).then(async (cache) => {
         try {

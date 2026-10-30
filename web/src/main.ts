@@ -13,6 +13,8 @@ const title = document.querySelector<HTMLInputElement>("#title")!;
 const abstract = document.querySelector<HTMLTextAreaElement>("#abstract")!;
 const characterCount = document.querySelector<HTMLElement>("#character-count")!;
 const submit = document.querySelector<HTMLButtonElement>("#submit")!;
+const submitLabel = submit.querySelector<HTMLElement>("span")!;
+const submitArrow = submit.querySelector<HTMLElement>("span[aria-hidden]")!;
 const status = document.querySelector<HTMLElement>("#status")!;
 const section = document.querySelector<HTMLElement>("#results-section")!;
 const results = document.querySelector<HTMLOListElement>("#results")!;
@@ -29,6 +31,64 @@ let requestId = 0;
 let lastResponse: MatchResponse | null = null;
 let lastInput: { title: string; abstract: string } | null = null;
 let expansionRequest = false;
+// Matching runs as soon as an abstract is pasted, or after a pause in typing.
+// Only one request is in flight; edits made meanwhile are matched afterwards.
+const AUTO_MATCH_MIN_CHARACTERS = 80;
+const TYPING_DELAY_MS = 700;
+let inFlight = false;
+let queued = false;
+let scrollOnResult = false;
+let autoTimer: number | undefined;
+
+function currentInput(): { title: string; abstract: string } {
+  return { title: title.value, abstract: abstract.value };
+}
+
+function resultsAreCurrent(): boolean {
+  const input = currentInput();
+  return lastResponse !== null && lastInput !== null
+    && input.title === lastInput.title && input.abstract === lastInput.abstract;
+}
+
+function updateSubmit(): void {
+  const current = resultsAreCurrent();
+  submitLabel.textContent = current ? `View ${lastResponse!.results.length} suggestions` : "Match sessions";
+  submitArrow.textContent = current ? "↓" : "↗";
+  submit.disabled = !ready;
+}
+
+function startMatch(): void {
+  if (!ready || !abstract.value.trim() || resultsAreCurrent()) return;
+  if (inFlight) {
+    queued = true;
+    return;
+  }
+  inFlight = true;
+  queued = false;
+  requestId += 1;
+  lastResponse = null;
+  lastInput = currentInput();
+  expansionRequest = false;
+  moreResultsWrap.hidden = true;
+  status.textContent = "Comparing your abstract with every session, locally…";
+  worker.postMessage({ type: "rank", id: requestId, input: lastInput });
+  updateSubmit();
+}
+
+function finishRequest(): void {
+  inFlight = false;
+  if (queued) startMatch();
+  updateSubmit();
+}
+
+function scheduleAutoMatch(event: Event): void {
+  window.clearTimeout(autoTimer);
+  updateSubmit();
+  if (abstract.value.trim().length < AUTO_MATCH_MIN_CHARACTERS) return;
+  const inputType = event instanceof InputEvent ? event.inputType : "";
+  const pasted = inputType === "insertFromPaste" || inputType === "insertFromDrop";
+  autoTimer = window.setTimeout(startMatch, pasted ? 0 : TYPING_DELAY_MS);
+}
 
 function confidenceText(value: "high" | "medium" | "low"): string {
   if (value === "high") return "focused shortlist";
@@ -172,16 +232,17 @@ function render(response: MatchResponse, shouldScroll = true): void {
   if (shouldScroll) section.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-abstract.addEventListener("input", () => {
+abstract.addEventListener("input", (event) => {
   characterCount.textContent = `${abstract.value.length.toLocaleString()} / 30,000`;
+  scheduleAutoMatch(event);
 });
+title.addEventListener("input", scheduleAutoMatch);
 
 worker.addEventListener("message", (event) => {
   const message = event.data;
   if (message.type === "status") status.textContent = message.message;
   if (message.type === "ready") {
     ready = true;
-    submit.disabled = false;
     document.querySelectorAll<HTMLElement>("[data-catalogue-year]").forEach((element) => {
       element.textContent = String(message.year).slice(-2);
     });
@@ -189,50 +250,51 @@ worker.addEventListener("message", (event) => {
       element.textContent = Number(message.sessionCount).toLocaleString();
     });
     status.textContent = `Ready · EGU${String(message.year).slice(-2)} · ${String(message.backend).toUpperCase()} · text remains on this device`;
+    updateSubmit();
+    // Text pasted while the model was loading is matched straight away.
+    if (abstract.value.trim().length >= AUTO_MATCH_MIN_CHARACTERS) startMatch();
   }
   if (message.type === "result" && message.id === requestId) {
     const expanding = expansionRequest;
+    const response = message.response as MatchResponse;
     expansionRequest = false;
-    render(message.response as MatchResponse, !expanding);
-    submit.disabled = false;
+    render(response, !expanding && scrollOnResult);
+    scrollOnResult = false;
+    const top = response.results[0];
     status.textContent = expanding
       ? "Additional candidates displayed from the same private match."
-      : "Matching complete. Your text was processed only in this browser.";
+      : `${response.results.length} suggestions below${top ? ` · top match ${top.code}` : ""} · processed only in this browser`;
+    finishRequest();
   }
   if ((message.type === "error" || message.type === "fatal") && (!message.id || message.id === requestId)) {
     expansionRequest = false;
     if (lastResponse) updateMoreControl(lastResponse);
     status.textContent = message.message;
-    submit.disabled = !ready;
+    if (message.id) finishRequest();
+    else updateSubmit();
   }
 });
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (!ready || !abstract.value.trim()) return;
-  requestId += 1;
-  lastResponse = null;
-  lastInput = { title: title.value, abstract: abstract.value };
-  expansionRequest = false;
-  moreResultsWrap.hidden = true;
-  submit.disabled = true;
-  status.textContent = "Embedding and comparing your abstract locally…";
-  worker.postMessage({
-    type: "rank",
-    id: requestId,
-    input: lastInput,
-  });
+  window.clearTimeout(autoTimer);
+  if (resultsAreCurrent()) {
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  scrollOnResult = true;
+  startMatch();
 });
 
 moreResults.addEventListener("click", () => {
-  if (!ready || !lastResponse || !lastInput) return;
+  if (!ready || inFlight || !lastResponse || !lastInput) return;
   const total = lastResponse.selection.candidateCount;
   const topK = Math.min(lastResponse.selection.shownCount + 10, total);
   if (topK <= lastResponse.selection.shownCount) return;
   requestId += 1;
+  inFlight = true;
   expansionRequest = true;
   moreResults.disabled = true;
-  submit.disabled = true;
   status.textContent = "Reusing the private match to reveal more candidates…";
   worker.postMessage({ type: "rank", id: requestId, input: lastInput, topK });
 });

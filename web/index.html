@@ -49,7 +49,7 @@
         <div class="landing-intro">
           <p class="eyebrow"><span>EGU General Assembly 2027 · Vienna &amp; online · 4–9 April</span></p>
           <h1 id="matcher-title">Find the right session<br /><em>for your EGU27 abstract.</em></h1>
-          <p class="intro">Paste your title and abstract to rank all <span data-session-count>1,259</span> EGU27 scientific sessions by fit. Matching runs entirely in your browser — your text never leaves this device.</p>
+          <p class="intro">Paste your title and abstract: all <span data-session-count>1,259</span> EGU27 scientific sessions are ranked by fit as soon as the text is in. Matching runs entirely in your browser — your text never leaves this device.</p>
           <p class="landing-meta"><span>Private, on-device</span><span>Tested on EGU24–EGU26</span><span>Free, no account</span></p>
         </div>
         <form id="matcher-form" class="composer landing-composer">
@@ -99,13 +99,9 @@
           <div class="chart-toolbar">
             <figcaption>
               <strong>Share of abstracts whose session is within the top <em>k</em> suggestions</strong>
-              <span>Session Finder compared with plain text-embedding search, same candidates</span>
+              <span>Each conference scored by a model that never saw it · scientific sessions only</span>
             </figcaption>
             <div class="segmented" role="group" aria-label="Conference year" id="year-picker"></div>
-          </div>
-          <div class="chart-legend" aria-hidden="true">
-            <span><i class="key key-model"></i>EGU27 Session Finder</span>
-            <span><i class="key key-baseline"></i>Plain embedding search</span>
           </div>
           <div id="rank-chart" class="rank-chart"></div>
           <div id="chart-tooltip" class="chart-tooltip" hidden></div>
@@ -113,9 +109,9 @@
 
         <div class="table-wrap">
           <table class="track-table">
-            <caption>Backtest results by conference (scientific sessions only)</caption>
+            <caption>Backtest results by conference (scientific sessions only). Top <em>k</em>: share of abstracts whose actual session is among the first <em>k</em> suggestions. The shortlist adapts its length to each abstract; its typical length is the median over all abstracts.</caption>
             <thead>
-              <tr><th scope="col">Conference</th><th scope="col">Trained on</th><th scope="col">Top 1</th><th scope="col">Top 2</th><th scope="col">Top 5</th><th scope="col">Top 10</th><th scope="col">Top 20</th><th scope="col">Shortlist hit rate</th></tr>
+              <tr><th scope="col">Conference</th><th scope="col">Trained on</th><th scope="col">Top 1</th><th scope="col">Top 2</th><th scope="col">Top 5</th><th scope="col">Top 10</th><th scope="col">Top 20</th><th scope="col">Right session in shortlist</th><th scope="col">Typical shortlist length</th></tr>
             </thead>
             <tbody id="track-table-body"></tbody>
           </table>
@@ -151,7 +147,7 @@
     </main>
 
     <footer>
-      <div><strong>EGU27 Session Finder</strong><p>An independent tool by <a href="https://mgravey.com/">Mathieu Gravey</a>. Not affiliated with or endorsed by the European Geosciences Union.</p></div>
+      <div><strong>EGU27 Session Finder</strong><p>An independent tool by <a href="https://mgravey.com/">Mathieu Gravey</a>. Not affiliated with or endorsed by the European Geosciences Union. Developed with the help of AI coding tools.</p></div>
       <div class="footer-links">
         <a href="./method.html">Method →</a>
         <a href="./privacy.html">Privacy →</a>
