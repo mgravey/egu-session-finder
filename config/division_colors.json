@@ -27,7 +27,9 @@
     "SSP": "#59A14F",
     "SSS": "#7CB342",
     "ST": "#D4A017",
-    "TS": "#D1495B"
+    "TS": "#D1495B",
+    "GS": "#E69F00",
+    "RHP": "#8D6E63"
   },
-  "note": "The former official-source URL currently returns HTTP 404. This stable project palette provides accessible, consistent division recognition and never affects ranking."
+  "note": "The former official-source URL currently returns HTTP 404. This stable project palette provides accessible, consistent division recognition and never affects ranking. GS (Geoscience & Society, EGU27) inherits the EOS colour it replaces; RHP marks the EGU27 Perth regional hub."
 }

@@ -31,6 +31,7 @@ EVENTS: dict[int, tuple[str, str]] = {
     2024: ("EGU24", "https://meetingorganizer.copernicus.org/EGU24/sessionprogramme"),
     2025: ("EGU25", "https://meetingorganizer.copernicus.org/EGU25/sessionprogramme"),
     2026: ("EGU26", "https://meetingorganizer.copernicus.org/EGU26/sessionprogramme/pg-selection"),
+    2027: ("EGU27", "https://meetingorganizer.copernicus.org/EGU27/sessionprogramme/pg-selection"),
 }
 SESSION_PATH_PATTERN = re.compile(r"/(?P<event>EGU(?:\d{2}|\d{4}))/session/(?P<id>\d+)", re.I)
 GENERIC_SESSION_LINK_TEXT = re.compile(
@@ -331,7 +332,13 @@ def description_from_soup(soup: BeautifulSoup) -> tuple[str | None, str | None]:
             description = " ".join(modal.get_text(" ", strip=True).split()) or None
             modal_title = " ".join(str(modal.get("title", "")).split()) or None
             return description, modal_title
-    for selector in ("#session-description", ".session-description", ".session_description"):
+    for selector in (
+        "#session-description",
+        ".session-description",
+        ".session_description",
+        # EGU27 and newer render the description inline.
+        "p.sessionDescription",
+    ):
         element = soup.select_one(selector)
         if element is not None:
             return " ".join(element.get_text(" ", strip=True).split()) or None, None
@@ -381,11 +388,14 @@ def parse_session_page(
         )
         if block is not None:
             candidate = " ".join(block.get_text(" ", strip=True).split())
-            if candidate:
+            # Format badges such as "PICO" occupy this element in EGU27 pages.
+            if re.search(r"\d", candidate):
                 code = candidate
     if not code:
         title_text = soup.title.get_text(" ", strip=True) if soup.title else ""
-        match = re.search(r"\bSession\s+([A-Z0-9.]+)", title_text, re.I)
+        match = re.search(r"\[Programme\]\s+([A-Z][A-Z0-9./]*)\s*\|", title_text) or re.search(
+            r"\bSession\s+([A-Z0-9.]+)", title_text, re.I
+        )
         if match:
             code = match.group(1).strip()
     if not code:
@@ -459,7 +469,7 @@ def parse_events(years: list[int], data_dir: Path) -> dict[str, Any]:
             "abstract_assignments": sum(item["abstract_count"] for item in parsed),
         }
 
-    combined_output = data_dir / "processed" / "egu_sessions_2020_2026.jsonl.gz"
+    combined_output = data_dir / "processed" / f"egu_sessions_{min(years)}_{max(years)}.jsonl.gz"
     temporary = combined_output.with_name(f".{combined_output.name}.tmp")
     with gzip.open(temporary, "wt", encoding="utf-8") as stream:
         for record in combined:

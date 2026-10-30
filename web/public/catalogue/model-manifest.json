@@ -28,28 +28,28 @@
     ],
     "queryMetric": {
       "path": "query-metric.bin",
-      "sha256": "7780515ae7e4f2575301b30038f7395fe25637562d132a6160dfc7f988992214"
+      "sha256": "3560ba8202d02240ad28f7f5e5dd93a0df11fdc8176b1647803164e745c6aa8b"
     },
     "sessions": {
       "path": "sessions.json",
-      "sha256": "38a1d6948d7f6cb431fd62b282f6c420eba4d37c10abe4f8c39d208b75477e62"
+      "sha256": "34a634558de05b7992272c956e1b389682009a999cd47de5b02299e6b1ce46e4"
     },
     "vectors": {
       "path": "session-vectors.bin",
-      "sha256": "3d611040875220b934b2b60fe5a5753df8b9d24b74bd606f5b50117eeb3d1a8b"
+      "sha256": "959986c08faf4194b94ac2dc161d5daecddbb41fc80bac98aa444a18e1788b19"
     }
   },
   "browserModelId": "Xenova/all-MiniLM-L6-v2",
   "browserModelPath": "/models/minilm-l6",
-  "catalogueVersion": "EGU26-multivector-2026-08-24",
-  "catalogueYear": 2026,
+  "catalogueVersion": "EGU27-multivector-2026-10-30",
+  "catalogueYear": 2027,
   "confidenceBands": {
     "margin_high": 1.0,
     "top_score_high": 1.0,
     "top_score_low": -1.0
   },
   "dimension": 384,
-  "generatedAt": "2026-08-24T09:38:51.576440+00:00",
+  "generatedAt": "2026-10-30T16:00:00.881288+00:00",
   "maxTokens": 256,
   "metric": {
     "dimension": 384,
@@ -91,11 +91,11 @@
   "overlapTokens": 32,
   "pooling": "mean",
   "predictionSet": {
-    "calibrationExamples": 19493,
-    "calibrationYear": 2024,
+    "calibrationExamples": 20804,
+    "calibrationYear": 2026,
     "candidatePolicy": "typical-scientific-only",
     "maxResults": 20,
-    "maxScoreGap": 0.13238704204559326,
+    "maxScoreGap": 0.13328102231025696,
     "method": "top-score-gap",
     "minResults": 3,
     "score": "learned_metric_plus_multivector",
@@ -116,14 +116,14 @@
       "sessionChunks": 2,
       "sessionVectorStride": 4,
       "weights": {
-        "chunks_to_description": 0.10285410284996033,
-        "chunks_to_title": 0.02826087921857834,
-        "joint": 0.7807101011276245,
-        "title_to_description": 0.011375309899449348,
-        "title_to_title": 0.0767996683716774
+        "chunks_to_description": 0.06174385920166969,
+        "chunks_to_title": 0.006272390019148588,
+        "joint": 0.8700667023658752,
+        "title_to_description": 0.004131800029426813,
+        "title_to_title": 0.0577852800488472
       }
     }
   },
-  "sessionCount": 786,
+  "sessionCount": 1259,
   "vectorDtype": "float16-le"
 }

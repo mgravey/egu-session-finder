@@ -34,6 +34,8 @@ SPLITS = {
     2024: "validation",
     2025: "test",
     2026: "forward",
+    # Programme published before the conference: sessions only, no assignments.
+    2027: "forecast",
 }
 
 

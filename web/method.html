@@ -36,7 +36,7 @@
           <p class="card-kicker">At a glance</p>
           <dl>
             <div><dt>121,971</dt><dd>historical abstracts prepared</dd></div>
-            <div><dt>786</dt><dd>typical EGU26 sessions ranked</dd></div>
+            <div><dt>1,259</dt><dd>typical EGU27 sessions ranked</dd></div>
             <div><dt>384</dt><dd>dimensions per base embedding</dd></div>
             <div><dt>0</dt><dd>submitted words sent to a server</dd></div>
           </dl>
@@ -53,7 +53,7 @@
         <ol class="pipeline-list">
           <li><span>01</span><div><h3>Read several views of the text</h3><p>The title, complete title-plus-abstract, and tokenizer-aware specialist passages are read separately. Long abstracts use overlapping chunks instead of silently losing the ending.</p></div></li>
           <li><span>02</span><div><h3>Create semantic vectors</h3><p>A quantized MiniLM transformer uses attention layers and mean pooling to create normalized 384-dimensional representations. A compact learned query transformation adapts them to EGU retrieval.</p></div></li>
-          <li><span>03</span><div><h3>Compare every scientific session</h3><p>The query views are compared with precomputed title and description vectors for all 786 typical EGU26 sessions. Special events such as medals, short courses, town halls, and administrative sessions are excluded.</p></div></li>
+          <li><span>03</span><div><h3>Compare every scientific session</h3><p>The query views are compared with precomputed title and description vectors for all 1,259 typical EGU27 sessions. Special events such as medals, short courses, geo panels, town halls, and administrative sessions are excluded.</p></div></li>
           <li><span>04</span><div><h3>Combine five relevance signals</h3><p>The scorer combines joint text similarity, title-to-title, title-to-description, passage-to-title, and passage-to-description matches using weights learned on past assignments.</p></div></li>
           <li><span>05</span><div><h3>Adapt the number of suggestions</h3><p>A validation-calibrated score-gap rule returns a short set for focused abstracts and a broader set for ambiguous ones. You can still reveal the next ten sessions through the complete ranking.</p></div></li>
         </ol>
@@ -93,7 +93,7 @@
           <p>The preparation pipeline is deliberately separate from the public site. It can be computationally expensive; the exported matcher remains compact.</p>
         </div>
         <div class="construction-grid">
-          <article><span>A</span><h3>Cache the programmes</h3><p>Session pages for 2020–2026 were collected gently and cached locally, with parsers for the different historical page layouts.</p></article>
+          <article><span>A</span><h3>Cache the programmes</h3><p>Session pages for 2020–2027 were collected gently and cached locally, with parsers for the different historical page layouts.</p></article>
           <article><span>B</span><h3>Recover abstracts</h3><p>Crossref records with Copernicus EGU DOI prefixes provide titles and abstracts. Original source-file and line locations remain traceable.</p></article>
           <article><span>C</span><h3>Join accepted assignments</h3><p>Abstract identifiers from programme pages link each abstract to its recorded session. Multiple valid assignments are preserved instead of forcing one label.</p></article>
           <article><span>D</span><h3>Prevent leakage</h3><p>Session representations contain only official code, division, title, and description—never abstracts already accepted into that session.</p></article>
@@ -104,18 +104,18 @@
         <div class="evaluation-copy">
           <p class="eyebrow">Evaluation through time</p>
           <h2 id="evaluation-title">Past years keep their roles</h2>
-          <p>Training and model choice never see the future. Sparse 2020–2021 public assignments are retained only as auxiliary catalogues.</p>
+          <p>EGU27 has no assignments yet, so the final model learns from every labeled year and is calibrated on the most recent one. The same recipe was first backtested one year earlier: trained on 2022–2024, calibrated on 2025, and scored on EGU26, which it never saw. Sparse 2020–2021 public assignments are retained only as auxiliary catalogues.</p>
         </div>
         <div class="split-grid" aria-label="Temporal evaluation split">
-          <article><strong>2022–23</strong><span>Training</span><p>Learn retrieval transformations and ranking weights.</p></article>
-          <article><strong>2024</strong><span>Validation</span><p>Select the scorer and calibrate the 80% prediction set.</p></article>
-          <article><strong>2025</strong><span>Sealed test</span><p>Measure generalization only after model selection.</p></article>
-          <article><strong>2026</strong><span>Forward check</span><p>Confirm behavior and build the current catalogue.</p></article>
+          <article><strong>2022–25</strong><span>Training</span><p>Learn retrieval transformations and ranking weights from 68,000 assigned abstracts.</p></article>
+          <article><strong>2026</strong><span>Validation</span><p>Choose the stopping point and calibrate the 80% prediction set on the most recent year.</p></article>
+          <article><strong>EGU26</strong><span>Backtest</span><p>The same recipe, shifted one year back, reached 77.5% Recall@10 on an unseen year.</p></article>
+          <article><strong>2027</strong><span>Forecast</span><p>Rank the newly published EGU27 programme.</p></article>
         </div>
         <div class="coverage-strip" aria-label="Dynamic shortlist evaluation">
-          <div><strong>80.3%</strong><span>EGU24 coverage</span><small>median set 10</small></div>
-          <div><strong>81.4%</strong><span>EGU25 coverage</span><small>median set 10</small></div>
-          <div><strong>80.8%</strong><span>EGU26 coverage</span><small>median set 11</small></div>
+          <div><strong>79.5%</strong><span>EGU26 backtest coverage</span><small>unseen year · median set 9</small></div>
+          <div><strong>77.5%</strong><span>EGU26 backtest Recall@10</span><small>unseen year · MRR 0.469</small></div>
+          <div><strong>80.4%</strong><span>EGU26 calibration coverage</span><small>final model · median set 9</small></div>
         </div>
         <p class="method-caveat"><strong>Coverage</strong> means at least one historically recorded assignment appears in the calibrated set. It does not mean that assignment was uniquely correct; authors and conveners can reasonably choose different interdisciplinary homes.</p>
       </section>
@@ -159,7 +159,7 @@
         <a href="./index.html#matcher">Matcher →</a>
         <a href="./privacy.html">Privacy →</a>
         <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2" target="_blank" rel="noopener noreferrer">Model provenance ↗</a>
-        <a href="https://meetingorganizer.copernicus.org/EGU26/sessionprogramme/pg-selection" target="_blank" rel="noopener noreferrer">Official programme ↗</a>
+        <a href="https://meetingorganizer.copernicus.org/EGU27/sessionprogramme/pg-selection" target="_blank" rel="noopener noreferrer">Official programme ↗</a>
       </div>
     </footer>
     <script type="module" src="/src/method.ts"></script>

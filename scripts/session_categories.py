@@ -10,6 +10,7 @@ NONSTANDARD_SESSION_PREFIXES = frozenset(
     {
         "DM",   # Division meetings
         "GDB",  # Great debates
+        "GP",   # Geo Panels (EGU27 successor of the great debates)
         "LRS",  # Named and public lectures
         "MAL",  # Medal and award lectures
         "NET",  # Networking and receptions

@@ -471,7 +471,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         device=args.device,
     )
     write_json(args.output_dir / "confidence-bands.json", confidence_bands)
-    final_years = [args.test_year, *args.forward_years]
+    final_years = [
+        year for year in (args.test_year, *args.forward_years) if year is not None
+    ]
     final_metrics = {}
     baseline_final = {}
     rank_files = {}
@@ -512,7 +514,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     )
     report = {
         "objective": "multi-positive listwise softmax over every same-year session",
-        "selection_rule": "maximum 2024 Recall@10, then MRR",
+        "selection_rule": f"maximum {args.validation_year} Recall@10, then MRR",
         "train_years": args.train_years,
         "validation_year": args.validation_year,
         "sealed_test_year": args.test_year,
@@ -540,6 +542,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     return report
 
 
+def optional_year(value: str) -> int | None:
+    return None if value.lower() == "none" else int(value)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepared-dir", type=Path, default=Path("data/matcher/prepared"))
@@ -550,7 +556,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--metric-types", nargs="+", choices=("diagonal", "lowrank"), default=["diagonal", "lowrank"])
     parser.add_argument("--train-years", nargs="+", type=int, default=[2022, 2023])
     parser.add_argument("--validation-year", type=int, default=2024)
-    parser.add_argument("--test-year", type=int, default=2025)
+    parser.add_argument(
+        "--test-year",
+        type=optional_year,
+        default=2025,
+        help="sealed test year, or 'none' when every labeled year is used for fitting",
+    )
     parser.add_argument("--forward-years", nargs="*", type=int, default=[2026])
     parser.add_argument("--device", default="mps")
     parser.add_argument("--epochs", type=int, default=20)

@@ -21,5 +21,5 @@ class SessionCategoryTests(unittest.TestCase):
             self.assertTrue(is_typical_scientific_session({"session_code": code}))
 
     def test_excludes_nonstandard_programme_categories(self):
-        for code in ("MAL20-HS", "SC2.1", "SPM12", "TM3", "GDB2", "VPS4"):
+        for code in ("MAL20-HS", "SC2.1", "SPM12", "TM3", "GDB2", "GP9", "VPS4"):
             self.assertFalse(is_typical_scientific_session({"session_code": code}))

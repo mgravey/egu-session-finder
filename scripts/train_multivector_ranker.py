@@ -217,7 +217,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         year: build_year_training_data(
             sessions=sessions, abstracts=abstracts, year=year
         )
-        for year in (2022, 2023, 2024, 2025, 2026)
+        for year in sorted({*args.train_years, args.validation_year, *args.report_years})
     }
     model = MultiVectorWeights.create((0.60, 0.10, 0.10, 0.10, 0.10)).to(args.device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate)
@@ -227,7 +227,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     for epoch in range(1, args.epochs + 1):
         model.train()
         losses = []
-        for year in (2022, 2023):
+        for year in args.train_years:
             data = years[year]
             order = np.random.permutation(len(data.abstract_indices))
             for start in range(0, len(order), args.batch_size):
@@ -249,7 +249,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 losses.append(float(loss.detach()))
         validation = evaluate(
             model=model,
-            data=years[2024],
+            data=years[args.validation_year],
             arrays=arrays,
             device=args.device,
             batch_size=args.eval_batch_size,
@@ -277,6 +277,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise RuntimeError("training produced no checkpoint")
     model.load_state_dict(best_state)
 
+    report_years = list(dict.fromkeys([args.validation_year, *args.report_years]))
     learned = {
         str(year): evaluate(
             model=model,
@@ -285,7 +286,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             device=args.device,
             batch_size=args.eval_batch_size,
         )
-        for year in (2024, 2025, 2026)
+        for year in report_years
     }
     baseline_model = MultiVectorWeights.create((1.0, 1e-8, 1e-8, 1e-8, 1e-8)).to(
         args.device
@@ -298,15 +299,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             device=args.device,
             batch_size=args.eval_batch_size,
         )
-        for year in (2024, 2025, 2026)
+        for year in report_years
     }
     weights = model.weights().detach().cpu().numpy()
     report = {
         "features": list(FEATURE_NAMES),
-        "training_years": [2022, 2023],
-        "validation_year": 2024,
-        "sealed_test_year": 2025,
-        "forward_year": 2026,
+        "training_years": args.train_years,
+        "validation_year": args.validation_year,
+        "report_years": report_years,
         "input_metric_head": str(args.metric_head) if args.metric_head else None,
         "selected_weights": {
             name: round(float(value), 8)
@@ -332,6 +332,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--metric-head",
         type=Path,
         help="Optionally transform every query/session field with an existing learned head",
+    )
+    parser.add_argument("--train-years", type=int, nargs="+", default=[2022, 2023])
+    parser.add_argument("--validation-year", type=int, default=2024)
+    parser.add_argument(
+        "--report-years",
+        type=int,
+        nargs="*",
+        default=[2025, 2026],
+        help="additional held-out years evaluated after weight selection",
     )
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--epochs", type=int, default=5)

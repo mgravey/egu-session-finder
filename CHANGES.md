@@ -1,5 +1,18 @@
 # Changes
 
+- Crawled the EGU27 call-for-abstracts programme (1,336 sessions) and added
+  parsing for its inline `sessionDescription` layout; session codes no longer
+  fall back to presentation-format badges such as `PICO`. Re-parsing
+  2020–2026 is byte-identical.
+- Excluded EGU27 Geo Panels (`GP`) as non-standard sessions and added colours
+  for the new Geoscience & Society (`GS`) division and Perth regional hub.
+- Made metric and multi-vector training years configurable, including an
+  optional sealed test year, and marked 2027 as a sessions-only `forecast` split.
+- Retrained the low-rank metric and multi-vector weights on 2022–2025, selected
+  and calibrated on 2026, and exported the EGU27 browser catalogue with 1,259
+  typical scientific sessions. A one-year-earlier backtest of the same recipe
+  reached 77.5% Recall@10 and 79.5% shortlist coverage on unseen EGU26.
+
 - Replaced the shared LAN development server with a production-static preview
   command and added a tested SHA-256 fallback for insecure-context LAN browsers.
 - Added a favicon-first matching-path brand mark across the header, browser
